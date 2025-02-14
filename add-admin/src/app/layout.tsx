@@ -1,9 +1,12 @@
+// "use client"
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/react-query/provider";
 import ReduxProvider from "@/Redux/provider";
 import { Toaster } from "@/app/components/ui/toaster";
+import LoginCheck from "@/providers/login-check";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,22 +23,29 @@ export const metadata: Metadata = {
   description: "Empower your business with our microservice-based SaaS platform that lets users build custom Learning Management Systems. Leverage isolated multi-tenant databases with Django-tenants, seamless Razorpay integration for flexible plans (Pro, Premium, Luxury), and event-driven microservices for courses, user management, and chat—while a centralized admin dashboard tracks all resources via subdomain routing",
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
-        {/* <ReduxProvider> */}
+        <ReduxProvider>
           <ReactQueryProvider>
+            
+    <LoginCheck>
 
         {children}
+    </LoginCheck>
           </ReactQueryProvider>
-        {/* </ReduxProvider> */}
+        </ReduxProvider>
         <Toaster />
 
       </body>

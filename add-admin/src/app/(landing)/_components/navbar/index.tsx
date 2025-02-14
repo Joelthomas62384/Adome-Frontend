@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react';
 import Menu from './menu';
 import Link from 'next/link';
@@ -5,15 +7,22 @@ import { Button } from '@/components/ui/button';
 import { Logout } from '@/icons';
 import GlassSheet from '@/components/global/glass-sheet';
 import { MenuIcon } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/Redux/store';
 
 type Props = {};
 
 const LandingPageNavbar = (props: Props) => {
+  const { isLoggedIn} = useSelector((state:RootState) =>state.user)
   return (
     <div className="w-full  flex justify-between  sticky top-0 items-center py-5 z-50">
       <p className="font-bold text-2xl ">Adome.</p>
       <Menu orientation="desktop"  />
-      <Link href={'/sign-in'} >
+
+
+{
+
+      ( <Link href={'http://localhost/api/auth/login'} passHref>
         <Button
           variant={'outline'}
           className="bg-themeBlack rounded-2xl flex  gap-2 border-themeGray hover:bg-themeGray"
@@ -21,7 +30,9 @@ const LandingPageNavbar = (props: Props) => {
           <Logout />
           Login
         </Button>
-      </Link>
+      </Link>)
+
+}
       <GlassSheet
         triggerClass="lg:hidden"
         trigger={
