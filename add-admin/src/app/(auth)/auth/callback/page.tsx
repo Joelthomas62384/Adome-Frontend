@@ -9,6 +9,7 @@ import { useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import TenantCreateModal from './_components/TenantModal'
+import BackdropGradient from '@/components/global/backdrop-gradiant'
 
 type Props = {}
 
@@ -18,23 +19,27 @@ const Page = (props: Props) => {
   const code = searchParams.get('code')
   const scope = searchParams.get('scope')
   const authUser = searchParams.get("authuser")
-  const [open, setOpen] = useState(true)
   const { isLoggedIn } = useSelector((state: RootState) => state.user)
   const { toast } = useToast()
+  const [subdomain, setSubdomain] = useState<string | null>(null)
+  const {schemaName} = useSelector((state: RootState) => state.app)
 
   const fetchAuth = async () => {
   try{
     if (!code || !scope || !stateParam || !authUser) {
         throw new Error("Missing parameters")
       }
-      const response = await axiosInstance.post('/api/auth/login', {
+      const response = await axiosInstance.post(`user/${schemaName}/login`, {
         code,
         scope,
         state: stateParam,
         authUser
       })
+      console.log(response.data)
       if (!response.data.app) {
         console.log("No app found")
+      }else{
+        setSubdomain(response.data.app)
       }
       return response.data
   }catch (error:any) {
@@ -58,8 +63,10 @@ const Page = (props: Props) => {
 
   return (
     <div className="h-screen w-full flex items-center justify-center">
+      <BackdropGradient className=' pt-20 flex flex-col items-center gap-3'>
       <Spinner size="large" />
-      <TenantCreateModal open={open} />
+      <TenantCreateModal open={true} subdomain={subdomain} />
+</BackdropGradient>
     </div>
   )
 }

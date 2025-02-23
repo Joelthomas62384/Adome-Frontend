@@ -1,12 +1,11 @@
 import BackdropGradient from "@/components/global/backdrop-gradiant"
 import GradientText from "@/components/global/gradiant-text"
 import PricingCard from "@/components/pricing-carrd"
-import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardTitle } from "@/components/ui/card"
-import { Check } from "@/icons"
-import Link from "next/link"
+import { prices } from "@/constants"
+
 
 type Props = {}
+
 
 export const PricingSection = (props: Props) => {
   return (
@@ -26,9 +25,13 @@ export const PricingSection = (props: Props) => {
       </BackdropGradient>
     
     <div className="flex gap-36">
-    <PricingCard />
-    <PricingCard />
-    <PricingCard />
+      {
+        prices.map(features => (
+          <PricingCard key={features.price}  {...features} />
+
+        ))
+      }
+    
     </div>
     </div>
   )

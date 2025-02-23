@@ -14,6 +14,7 @@ type Props = {};
 
 const LandingPageNavbar = (props: Props) => {
   const { isLoggedIn} = useSelector((state:RootState) =>state.user)
+  const { schemaName} = useSelector((state: RootState) => state.app)
   return (
     <div className="w-full  flex justify-between  sticky top-0 items-center py-5 z-50">
       <p className="font-bold text-2xl ">Adome.</p>
@@ -22,7 +23,7 @@ const LandingPageNavbar = (props: Props) => {
 
 {
 
-      ( <Link href={'http://localhost/api/auth/login'} passHref>
+      ( <Link href={`http://localhost/user/${schemaName}/login`} passHref>
         <Button
           variant={'outline'}
           className="bg-themeBlack rounded-2xl flex  gap-2 border-themeGray hover:bg-themeGray"

@@ -11,8 +11,8 @@ type initialStateType = {
 
 
 const initialState: initialStateType = {
-    appname : '',
-    schemaName : '',
+    appname : 'public',
+    schemaName : 'public',
     logo : '',
 }
 

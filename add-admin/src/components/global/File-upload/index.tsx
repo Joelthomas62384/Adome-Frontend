@@ -7,7 +7,7 @@ import UploadDropzone from '../upload-dropzone'
 
 
 type Props = {
-  apiEndpoint: 'agencyLogo' | 'avatar' | 'subaccountLogo'
+  apiEndpoint: string
   onChange: (url?: string) => void
   value?: string
 }
@@ -34,7 +34,7 @@ const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
               href={value}
               target="_blank"
               rel="noopener_noreferrer"
-              className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
+              className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 "
             >
               View PDF
             </a>
@@ -52,11 +52,16 @@ const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
     )
   }
   return (
-    <div className="w-full bg-muted/30">
+    <div className="w-full bg-[#333337]   ">
       <UploadDropzone
-       apiEndpoint='/api/upload'
-       onUploadComplete = {(url:string)=>{}}
-         onUploadError = {(error:string)=>{}}
+       apiEndpoint={apiEndpoint}
+       onUploadComplete = {(url:string)=>{
+         console.log(url)
+        onChange(url);
+       }}
+         onUploadError = {(error:string)=>{
+          console.log(error)
+         }}
         
       />
     </div>

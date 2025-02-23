@@ -1,7 +1,9 @@
 "use client"
+import { store } from "@/Redux/store";
 // import { useAuth } from "@/context";
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { getCookie,removeCookie } from "typescript-cookie";
+
 
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL 
@@ -19,13 +21,14 @@ axiosInstance.interceptors.request.use(
     try {
       const tokenExpiry:Number = Number(getCookie("expiry"));
       const currentTime:Number = Math.floor(Date.now() / 1000);
+      const schemaName = store.getState().app.schemaName
 
       if ( tokenExpiry && currentTime > tokenExpiry) {
         if (!isRefreshing) {
           isRefreshing = true;
           try {
          
-            const response = await axios.post(`${apiUrl}api/auth/refresh`, {}, { withCredentials: true });
+            const response = await axios.post(`${apiUrl}user/${schemaName}/refresh`, {}, { withCredentials: true });
 
             console.log("Token refreshed successfully", response.data);
           } catch (error) {
