@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { useRouter } from 'next/navigation'
   
 
 type Props = {
@@ -27,6 +28,7 @@ type Props = {
   
     title? : "APP LINK" | "Create Agency",
     subdomain : string | null
+    setSubdomain : (subdomain : string | null) => void
 }
 // name : string
 // logo : string
@@ -42,7 +44,7 @@ type Props = {
 
 
 
-const TenantCreateModal = ({open , title , subdomain}: Props) => {
+const TenantCreateModal = ({open , title , subdomain , setSubdomain}: Props) => {
 
 
   const tenantSchema = z.object({
@@ -78,6 +80,7 @@ const TenantCreateModal = ({open , title , subdomain}: Props) => {
   })
   const {toast } = useToast()
   const { schemaName } = useSelector((state: RootState) => state.app)
+  const router = useRouter()
 
  
 
@@ -86,23 +89,25 @@ const TenantCreateModal = ({open , title , subdomain}: Props) => {
     try {
       const response = await axiosInstance.post(`tenant/${schemaName}/tenant`, data)
       console.log(response)
-      if (response.status === 200) {
+      if (response.status === 200 || response.status ===201) {
         toast({
           title : "Success",
           description : "Registered successfully",
           variant : "default"
         })
+        setSubdomain(response.data.subdomain)
+        console.log(response.data.subdomain)
+        form.reset()
       }
-  form.reset()
 
   } catch (error:any) {
-    
+    console.log(error)
     if(error.status===400){
 
-      if (error.response.data.email || error.response.data.username){
+      if (error.response.data.subdomain){
         toast({
           title : "Error",
-          description : error.response.data.email || error.response.data.username,
+          description : error.response.data.subdomain || error.response.data.error,
           variant:"destructive"
         })
         
@@ -120,7 +125,8 @@ const TenantCreateModal = ({open , title , subdomain}: Props) => {
   
 
 const navigatePage = ()=>{
-
+    window.location.href = `http://${subdomain}.localhost:3000/admin`
+    // router.push(`/agency/${subdomain}/admin`)
 }
 
 

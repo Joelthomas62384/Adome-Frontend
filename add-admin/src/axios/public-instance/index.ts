@@ -2,7 +2,7 @@
 import { store } from "@/Redux/store";
 // import { useAuth } from "@/context";
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
-import { getCookie,removeCookie } from "typescript-cookie";
+import { getCookie,removeCookie, setCookie } from "typescript-cookie";
 
 
 
@@ -28,8 +28,14 @@ axiosInstance.interceptors.request.use(
           isRefreshing = true;
           try {
          
-            const response = await axios.post(`${apiUrl}user/${schemaName}/refresh`, {}, { withCredentials: true });
-
+            const response:any = await axios.post(`${apiUrl}user/${schemaName}/refresh`, {}, { withCredentials: true });
+            const data= response.data
+            const refresh_token:string = data.refresh
+            const access_token:string = data.access
+            const expiry = data.expiry
+            setCookie('refresh_token', refresh_token)
+            setCookie('access_token', access_token)
+            setCookie('expiry', expiry)
             console.log("Token refreshed successfully", response.data);
           } catch (error) {
             console.error("Token refresh failed. Logging out user.");
@@ -46,6 +52,9 @@ axiosInstance.interceptors.request.use(
 
       return config;
     } catch (error) {
+ removeCookie('refresh_token')
+ removeCookie('access_token')
+ removeCookie('expiry')
       console.error("Request Interceptor Error:", error);
       return Promise.reject(error);
     }

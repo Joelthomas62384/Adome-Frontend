@@ -6,6 +6,7 @@ type initialStateType = {
     appname : string
     schemaName : string
     logo : string
+    appDetails : any
 }
 
 
@@ -14,6 +15,7 @@ const initialState: initialStateType = {
     appname : 'public',
     schemaName : 'public',
     logo : '',
+    appDetails : null
 }
 
 const appSlice = createSlice({
