@@ -11,7 +11,18 @@ type Props = {
     children: React.ReactNode
 }
 
-const client = new QueryClient()
+const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 5 * 60 * 1000, 
+        gcTime: 15 * 60 * 1000,
+      },
+    },
+  });
+
+
+//   const localstoragePersister = 
+  
 
 const ReactQueryProvider = ({children}: Props) => {
     return <QueryClientProvider client={client}>{children}</QueryClientProvider>

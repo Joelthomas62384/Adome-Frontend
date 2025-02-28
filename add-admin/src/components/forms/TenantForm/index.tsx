@@ -24,10 +24,11 @@ import { Switch } from "@/components/ui/switch" // Import Switch Component
 type Props = {
   form: UseFormReturn<TenantFormType>,
   onSubmit: SubmitHandler<TenantFormType>,
-  switches : boolean
+  switches : boolean,
+  actionText? : string
 }
 
-const TenantForm = ({ form, onSubmit,switches }: Props) => {
+const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props) => {
   const { schemaName } = useSelector((state: RootState) => state.app)
 
   return (
@@ -175,7 +176,7 @@ const TenantForm = ({ form, onSubmit,switches }: Props) => {
         }
 
           <div className="col-span-2 flex justify-center">
-            <Button className='bg-[#333337] rounded-2xl text-white hover:text-[#333337]' type="submit">Register</Button>
+            <Button className='bg-[#333337] rounded-2xl text-white hover:text-[#333337]' type="submit">{actionText}</Button>
           </div>
         </form>
       </Form>

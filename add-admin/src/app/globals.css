@@ -264,3 +264,18 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+
+/* globals.css */
+#nprogress .bar {
+  background: #B4B0AE !important; /* Change this to any color */
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #B4B0AE, 0 0 5px #B4B0AE !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #B4B0AE !important;
+  border-left-color: #B4B0AE !important;
+}

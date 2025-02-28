@@ -1,6 +1,6 @@
 import GradientText from "@/components/global/gradiant-text"
 import { Button } from "@/components/ui/button"
-import { BadgePlus } from "@/icons"
+import { BadgePlus } from "@/components/forms/TenantForm/icons"
 import Link from "next/link"
 
 type Props = {}

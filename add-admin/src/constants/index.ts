@@ -1,3 +1,4 @@
+
 import { LANDING_PAGE_MENU, MenuProps } from "./menus";
 
 type AdomeConstantsProbs = {
@@ -34,3 +35,16 @@ export const prices = [
     ]
   }
 ]
+
+export const getSubdomain = (): string => {
+  if (typeof window !== "undefined") {
+      const hostname = window.location.hostname; 
+      const parts = hostname.split(".");
+
+      const localhostIndex = parts.indexOf("localhost");
+      if (localhostIndex > 0) {
+          return parts.slice(0, localhostIndex).join("."); 
+      }
+  }
+  return "public"; 
+};

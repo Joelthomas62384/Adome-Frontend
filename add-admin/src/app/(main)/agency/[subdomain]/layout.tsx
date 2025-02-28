@@ -1,5 +1,6 @@
 import BackdropGradient from '@/components/global/backdrop-gradiant'
 import Sidebar from '@/components/global/sidebar'
+import TenantProvider from '@/providers/tenant-provider'
 import React from 'react'
 // import LandingPageNavbar from './_components/navbar'
 
@@ -12,8 +13,10 @@ const TenantsPage = ({children}: {children : React.ReactNode}) => {
     <div className=''>
       {/* <Sidebar /> */}
         {/* <LandingPageNavbar></LandingPageNavbar> */}
+      <TenantProvider>
 
         {children}
+      </TenantProvider>
         
     </div>
   )

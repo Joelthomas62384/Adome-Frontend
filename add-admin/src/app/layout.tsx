@@ -7,6 +7,8 @@ import ReactQueryProvider from "@/react-query/provider";
 import ReduxProvider from "@/Redux/provider";
 import { Toaster } from "@/app/components/ui/toaster";
 import LoginCheck from "@/providers/login-check";
+import withProgress from "@/providers/progressbar-provider";
+import ProgressBarProvider from "@/providers/progressbar-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,10 +41,12 @@ export default function RootLayout({
       >
         <ReduxProvider>
           <ReactQueryProvider>
-            
     <LoginCheck>
 
+    <ProgressBarProvider>
+
         {children}
+    </ProgressBarProvider>
     </LoginCheck>
           </ReactQueryProvider>
         </ReduxProvider>

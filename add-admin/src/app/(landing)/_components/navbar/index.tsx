@@ -4,7 +4,7 @@ import React from 'react';
 import Menu from './menu';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Logout } from '@/icons';
+import { Logout } from '@/components/forms/TenantForm/icons';
 import GlassSheet from '@/components/global/glass-sheet';
 import { MenuIcon } from 'lucide-react';
 import { useSelector } from 'react-redux';

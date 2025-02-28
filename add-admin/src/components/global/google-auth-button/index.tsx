@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 // import { useGoogleAuth } from "@/hooks/authentication"
-import { Google } from "@/icons"
+import { Google } from "@/components/forms/TenantForm/icons"
 import { RootState } from "@/Redux/store"
 import { useSelector } from "react-redux"
 // import { Loader } from "../loader"

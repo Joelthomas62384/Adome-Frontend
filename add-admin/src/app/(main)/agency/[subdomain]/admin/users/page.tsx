@@ -1,7 +1,6 @@
 "use client"
 
 import axiosInstance from '@/axios/public-instance';
-import UserTable from '@/components/global/user-table';
 import React, { useEffect, useState } from 'react';
 
 
@@ -38,7 +37,7 @@ const Page = () => {
     <div className='flex flex-col justify-center items-center min-h-screen p-4'>
       <h1 className='text-2xl font-bold mb-4 self-center'>Users</h1>
       <div className='w-full max-w-4xl'>
-        <UserTable users={users} />
+        {/* <UserTable users={users} /> */}
       </div>
     </div>
   );

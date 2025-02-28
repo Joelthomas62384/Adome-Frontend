@@ -59,13 +59,18 @@ const Page = () => {
     }
   };
 
-  useQuery({
-    queryKey: ['login', code, scope, stateParam, authUser],
-    queryFn: fetchAuth,
-    staleTime: 10000,
-    enabled: isLoggedIn === false,
-    retry: false
-  });
+  // useQuery({
+  //   queryKey: ['login', code, scope, stateParam, authUser],
+  //   queryFn: fetchAuth,
+  //   staleTime: 10000,
+  //   enabled: isLoggedIn === false,
+  //   retry: false
+  // });
+  useEffect(() => {
+    fetchAuth()
+   
+  }, [])
+  
 
   return (
     <div className="h-screen w-full flex items-center justify-center">

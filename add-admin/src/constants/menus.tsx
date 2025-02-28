@@ -1,4 +1,4 @@
-import { CreditCard, Explore, Home } from "@/icons";
+import { CreditCard, Explore, Home } from "@/components/forms/TenantForm/icons";
 import { JSX } from "react";
 
 
