@@ -4,6 +4,7 @@ import axiosInstance from "@/axios/public-instance";
 import { getSubdomain } from "@/constants";
 import { setUserData } from "@/Redux/slices/user-details";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCookie } from "typescript-cookie";
@@ -25,7 +26,7 @@ const TenantUserProvider = ({ children }: Props) => {
     queryFn: fetchTenantUser,
     retry: false,
   });
-
+  const router = useRouter()
   useEffect(() => {
     
     if (!isLoading && !isError && data) {
@@ -34,6 +35,10 @@ const TenantUserProvider = ({ children }: Props) => {
       setCookie('user_email',data.user.email)
     } else if (!isLoading && isError) {
       dispatch(setUserData({ user: null, isLoggedIn: false }));
+    }
+    if(data?.blocked){
+      router.push('/404')
+      
     }
   }, [data, isLoading, isError, dispatch]);
   
