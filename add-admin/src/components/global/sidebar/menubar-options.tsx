@@ -4,7 +4,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from "@/components/ui/command"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { SidebarType } from "@/types"
 import clsx from "clsx"
 import { CommandItem } from "cmdk"
@@ -46,7 +46,9 @@ const MenuOptions = ({ defaultOpen, sidebarLogo, sidebarOpt }: Props) => {
                         'inline-block md:hidden z-[100] w-full': !defaultOpen,
                     }
                 )}
-            >
+                >
+                    {/* <VisuallyHidden></VisuallyHidden> */}
+                <SheetTitle className="hidden">MenuItems</SheetTitle>
                 <div>
                 <AspectRatio ratio={10 / 5}>
            {

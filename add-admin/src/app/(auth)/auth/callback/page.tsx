@@ -56,7 +56,7 @@ const Page = () => {
         variant: 'destructive'
       });
       return error;
-    }
+    } 
   };
 
   // useQuery({

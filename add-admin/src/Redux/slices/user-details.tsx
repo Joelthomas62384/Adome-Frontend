@@ -1,23 +1,31 @@
+import { UserDetails } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
+import { string } from "zod";
 
 type initialStateType = {
-    fullName: string
-    email: string
-    profilePic : string
-    isLoggedIn: boolean
-    appname : string
-    isStaff : boolean
-    isAdmin : boolean
+    // fullName: string
+    // email: string
+    // profilePic : string
+    // isLoggedIn: boolean
+    // appname : string
+    // isStaff : boolean
+    // isAdmin : boolean
+    user : UserDetails,
+    isLoggedIn : boolean,
+    role : string
 }
 
 const initialState: initialStateType = {
-    fullName: '',
-    email: '',
-    profilePic : '',
-    isLoggedIn: false,
-    appname : '',
-    isStaff : false,
-    isAdmin : false,
+   user : {
+    name : '',
+    email : '',
+    full_name : '',
+    username : '',
+    profile_pic : '',
+    designation : '',
+   },
+    isLoggedIn : false,
+    role: ''
 }
 
 const userSlice = createSlice({

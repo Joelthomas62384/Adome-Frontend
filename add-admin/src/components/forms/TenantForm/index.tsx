@@ -29,16 +29,17 @@ type Props = {
 }
 
 const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props) => {
-  const { schemaName } = useSelector((state: RootState) => state.app)
+  const { schemaName, tenant } = useSelector((state: RootState) => state.app)
 
   return (
     <div className="flex flex-col items-center w-full">
       <div className="w-full flex justify-center">
-        <FileUpload
-          apiEndpoint={`mediamanager/${schemaName}/upload`}
-          value={form.watch("logo")}
-          onChange={(url?: string) => form.setValue("logo", url || '')}
-        />
+      <FileUpload
+  apiEndpoint={`mediamanager/${schemaName}/upload`}
+  value={form.watch("logo") || ""} 
+  onChange={(url?: string) => form.setValue("logo", url || '')}
+/>
+
       </div>
 
       <Form {...form}>
@@ -132,19 +133,8 @@ const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props
                 </FormItem>
               )}
             />
+            
 
-            <FormField
-              control={form.control}
-              name="community"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
-                  <FormLabel className="text-white">Community</FormLabel>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
 
             <FormField
               control={form.control}
@@ -153,11 +143,23 @@ const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props
                 <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
                   <FormLabel className="text-white">Newsletter</FormLabel>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled={tenant.subscription_plan === '1'} />
                   </FormControl>
                 </FormItem>
               )}
             />
+              <FormField
+                control={form.control}
+                name="community"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
+                    <FormLabel className="text-white">Community</FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange}  disabled={tenant.subscription_plan === '1'}/>
+                    </FormControl> 
+                  </FormItem>
+                )}
+              />
 
             <FormField
               control={form.control}
@@ -166,7 +168,7 @@ const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props
                 <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
                   <FormLabel className="text-white">Courses</FormLabel>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled={tenant.subscription_plan === '1'} />
                   </FormControl>
                 </FormItem>
               )}

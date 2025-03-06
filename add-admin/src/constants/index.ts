@@ -1,4 +1,5 @@
 
+import axiosInstance from "@/axios/public-instance";
 import { LANDING_PAGE_MENU, MenuProps } from "./menus";
 
 type AdomeConstantsProbs = {
@@ -47,4 +48,16 @@ export const getSubdomain = (): string => {
       }
   }
   return "public"; 
+};
+
+
+
+export const getTwoLetters = (full_name:string|undefined) => {
+  if (!full_name) return; 
+  const splittedName = full_name.split(" ");
+  if (splittedName.length > 1) {
+    return splittedName[0][0] + splittedName[1][0];
+  } else {
+    return full_name[0];
+  }
 };

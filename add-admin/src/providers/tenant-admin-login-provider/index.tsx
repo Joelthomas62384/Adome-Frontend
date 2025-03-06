@@ -18,7 +18,7 @@ type Props = {
 const TenantAdminLoginCheck = ({ children }: Props) => {
     const router = useRouter()
     const { isLoggedIn } = useSelector((state: RootState) => state.user)
-    const { schemaName ,tenant } = useSelector((state: RootState) => state.app)
+    const {     tenant } = useSelector((state: RootState) => state.app)
     const dispatch = useDispatch()
     
 
@@ -36,9 +36,7 @@ const TenantAdminLoginCheck = ({ children }: Props) => {
         
     }, [])
 
-    useEffect(()=>{
-        console.log(tenant)
-    },[tenant])
+
 
     return (
         <div>

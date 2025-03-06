@@ -3,7 +3,7 @@
 import TenantForm from '@/components/forms/TenantForm';
 import { RootState } from '@/Redux/store';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -14,6 +14,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import axiosInstance from '@/axios/public-instance';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/hooks/use-toast';
+import { setAppInfo } from '@/Redux/slices/app-details';
 
 const tenantSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -29,7 +33,12 @@ const tenantSchema = z.object({
 });
 
 const Page = () => {
-  const { tenant } = useSelector((state: RootState) => state.app);
+  const { tenant , schemaName} = useSelector((state: RootState) => state.app);
+  const queryClient = useQueryClient()
+  const {toast} = useToast()
+  const dispatch = useDispatch()
+  const subdomain = tenant.subdomain
+
 
   const form = useForm<TenantFormType>({
     resolver: zodResolver(tenantSchema),
@@ -47,8 +56,8 @@ const Page = () => {
     },
   });
 
-  // Reset form when `tenant` data changes
   useEffect(() => {
+    console
     if (tenant) {
       form.reset({
         name: tenant.name || '',
@@ -64,9 +73,59 @@ const Page = () => {
       });
     }
   }, [tenant, form]);
+  
+  const updateTenant = async (updatedData:TenantFormType)=>{
+    const {data} = await axiosInstance.put(`tenant/${schemaName}/tenant/${subdomain}`,updatedData)
+    return data
+  }
+
+  const optimisticTenantUpdate = useMutation({
+    mutationKey : ['updateTenant', schemaName],
+    mutationFn : updateTenant,
+    onMutate : async (newData : TenantFormType)=>{
+      await queryClient.cancelQueries({queryKey :['tenant' , schemaName]})
+
+      const previousData = queryClient.getQueryData<TenantFormType>(['tenant',schemaName])
+      queryClient.setQueryData(['tenant',schemaName], (previousData:TenantFormType)=>({
+        ...(previousData || {}),
+        ...newData
+      }))
+        toast({
+          title : "Success",
+          description : "Tenant updated successfully",
+          variant : "default"
+        })
+      return {previousData}
+
+    },
+    onSuccess : (data : TenantFormType)=>{
+      queryClient.invalidateQueries({ queryKey: ['tenant', schemaName] });
+      
+      if (data) dispatch(setAppInfo({tenant : data}))
+
+      
+
+
+    },
+    onError: (_err, _newData, context:any) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['tenant', schemaName], context.previousData); // Rollback state
+        // dispatch
+      }
+      toast({ title: 'Update failed!',description : "Tenant updation failed", variant: 'destructive' });
+    },
+  });
+
+
+
+  
+
+
+
+
 
   const onSubmit = (data: TenantFormType) => {
-    console.log('Form Submitted:', data);
+   optimisticTenantUpdate.mutate(data)
   };
 
   return (

@@ -35,9 +35,7 @@ const Page = (props: Props) => {
   const code = searchParams.get('code')
   const scope = searchParams.get('scope')
   const authUser = searchParams.get("authuser")
-  const { isLoggedIn } = useSelector((state: RootState) => state.user)
   const { toast } = useToast()
-  const [subdomain, setSubdomain] = useState<string | null>(null)
   const router = useRouter()
  
   
@@ -60,8 +58,6 @@ const schemaName = getSubdomain()
       console.log(response.data)
       if (!response.data.app) {
         console.log("No app found")
-      }else{
-        setSubdomain(response.data.app)
       }
       if (response.status === 200) {
 
@@ -94,19 +90,29 @@ const schemaName = getSubdomain()
   }
   }
 
-  useEffect( () => {
-    if (getCookie('expiry')){
-      router.push("/")
+  useEffect(() => {
+    if (!code) return;
+    
+    // Prevent execution in React Strict Mode
+    let isMounted = true;
+  
+    const authenticate = async () => {
+      if (getCookie('expiry')) {
+        router.push("/");
+        return;
+      }
+      const data = await fetchAuth();
+    };
+  
+    if (isMounted) {
+      authenticate();
     }
-   const callfunc = async()=>{
-    if (code){
-      const data = await fetchAuth()
-      
-   }
-      // window.history.replaceState({}, '', '/');  // Remove the query parameters from the URL
-    }
-    callfunc()
-  }, [code])
+  
+    return () => {
+      isMounted = false;
+    };
+  }, [code]);
+  
   
 
 //   useQuery({

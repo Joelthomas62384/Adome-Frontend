@@ -25,7 +25,6 @@ const getSubdomain = (): string => {
 
 
 const LoginCheck = ({ children }: Props) => {
-    console.log(getSubdomain())
     const { isLoggedIn } = useSelector((state: RootState) => state.user)
     const dispatch = useDispatch()
 
