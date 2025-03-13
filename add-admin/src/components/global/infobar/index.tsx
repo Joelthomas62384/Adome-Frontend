@@ -61,8 +61,8 @@ const InfoBar = ({className}: Props) => {
 
 
   useEffect(() => {
-    if (user?.full_name) {
-      setFallBackName(getTwoLetters(user?.full_name));
+    if (user?.user?.full_name) {
+      setFallBackName(getTwoLetters(user?.user?.full_name));
     }
   }, [user]);
   
@@ -81,7 +81,7 @@ const InfoBar = ({className}: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
          <Avatar className='cursor-pointer'>
-      <AvatarImage src={user?.profile_pic} alt="@shadcn" />
+      <AvatarImage src={user?.user?.profile_pic} alt="@shadcn" />
       <AvatarFallback>{fallBackName}</AvatarFallback>
     </Avatar>
 

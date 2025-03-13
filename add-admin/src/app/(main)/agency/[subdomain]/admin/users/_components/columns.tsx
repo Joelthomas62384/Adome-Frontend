@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { getSubdomain, getTwoLetters } from "@/constants";
-import { Role, UsersType } from "@/types";
+import { getLetters, getSubdomain, getTwoLetters } from "@/constants";
+import { Role, staffPermission, UsersType } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import {
@@ -12,23 +12,22 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Ban, Copy, Key, MoreHorizontal, MoreVertical, ShieldX, StopCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Ban,  Key,  MoreVertical, StopCircle } from "lucide-react";
+import {  useState } from "react";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+  } from "@/components/ui/tooltip"
+  
 import TextCopyButton from "./text-copy";
 import Assure from "@/components/global/Assure";
 import axiosInstance from "@/axios/public-instance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+
+import PermissionEditor from "./permission-editor";
 
 
 
@@ -64,17 +63,42 @@ export const columns: ColumnDef<UsersType>[] = [
         header: 'Role',
         cell: ({ row }) => {
             const role: Role = row.getValue('role')
+            const designation = row.original.designation
             return (
-                <Badge
-                    className={clsx({
-                        'bg-green-300 ': role === 'admin',
-                        'bg-orange-300': role === 'staff',
-                        'bg-white   ': role === 'user',
-                        'cursor-pointer': true
-                    })}
-                >
-                    {role}
-                </Badge>
+                <TooltipProvider>
+                {designation.length > 0 && designation.split(' ').length > 1 ? (
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <Badge
+                                className={clsx({
+                                    'bg-green-300 ': role === 'admin',
+                                    'bg-orange-300': role === 'staff',
+                                    'bg-white': role === 'user',
+                                    'cursor-pointer': true
+                                })}
+                            >
+                                {role === 'staff' && designation.length > 0 
+                                    ? getLetters(designation) 
+                                    : role.charAt(0).toUpperCase() + role.slice(1)}
+                            </Badge>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-themeDarkGray text-themeTextWhite">{designation}</TooltipContent>
+                    </Tooltip>
+                ) : (
+                    <Badge
+                        className={clsx({
+                            'bg-green-300 ': role === 'admin',
+                            'bg-orange-300': role === 'staff',
+                            'bg-white': role === 'user',
+                            'cursor-pointer': true
+                        })}
+                    >
+                        {(designation.length > 0 && designation.split(' ').length === 1) ? designation : (role.charAt(0).toUpperCase() + role.slice(1))}
+                    </Badge>
+                )}
+            </TooltipProvider>
+            
+            
             )
         },
     },
@@ -97,8 +121,14 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
     const [banBlock, setBanBlock] = useState("");
     const queryClient = useQueryClient();
     const { toast } = useToast();
-    const [staffData, setStaffData] = useState({
+    const [staffData, setStaffData] = useState<staffPermission>({
         is_staff: rowData.is_staff,
+        hasBlogPermission : rowData.hasBlogPermission,
+        hasCommunityPermission : rowData.hasCommunityPermission,
+        hasNewsletterPermission : rowData.hasNewsletterPermission,
+        hasCoursesPermission : rowData.hasCoursesPermission,
+        designation: rowData.designation,
+        hasStaffPermission : rowData.hasStaffPermission,
 
     })
 
@@ -180,24 +210,25 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
         },
     });
 
-    const makeStaff = async (newStatus: boolean) => {
-        return axiosInstance.patch(`user/${getSubdomain()}/tenantuser/${rowData.user.username}`, { is_staff: newStatus });
+    const makeStaff = async (newStatus: staffPermission) => {
+        return axiosInstance.patch(`user/${getSubdomain()}/tenantuser/${rowData.user.username}`, newStatus);
     };
 
     const updateUserMutation = useMutation({
         mutationFn: makeStaff,
         onMutate: async (newStatus) => {
             await queryClient.cancelQueries({ queryKey: ["users"] });
+    
             toast({
                 title: `User ${rowData.user.username} Updated`,
                 description: "User Data updated successfully",
             });
-
+    
             const previousUsers = queryClient.getQueryData(["users"]);
-
+    
             queryClient.setQueryData(["users"], (oldData: any) => {
                 if (!oldData) return oldData;
-
+    
                 return {
                     ...oldData,
                     pages: oldData.pages.map((page: any) => ({
@@ -205,29 +236,29 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
                         users: page.users.map((user: any) =>
                             user.username === rowData.user.username
                                 ? {
-                                    ...user,
+                                    ...user,  
                                     is_staff: newStatus,
                                     role: newStatus ? "staff" : "user"
                                 }
-                                : user
+                                : { ...user } 
                         ),
                     })),
                 };
             });
-
+    
             return { previousUsers };
         },
         onError: (err, newData, context) => {
+            console.error(err);
             if (context?.previousUsers) {
                 queryClient.setQueryData(["users"], context.previousUsers);
             }
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["users"] });
-
         }
     });
-
+    
 
     return (
         <>
@@ -256,24 +287,7 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Dialog open={open} onOpenChange={() => setOpen(!open)}>
-                <DialogContent className="bg-themeBlack">
-                    <DialogHeader>
-                        <DialogTitle>Edit {rowData.user.username}</DialogTitle>
-                        <DialogDescription>Here you can edit the permissions of the user</DialogDescription>
-                    </DialogHeader>
-                    <div className="flex items-center justify-between mt-4">
-                        <Label className="text-white">Staff</Label>
-                        <Switch checked={staffData.is_staff} onCheckedChange={(checked) => {
-                            setStaffData({ ...staffData, is_staff: checked });
-
-                            ;
-                            updateUserMutation.mutate(checked);
-                        }} />
-                    </div>
-                </DialogContent>
-            </Dialog>
-
+          <PermissionEditor rowData={rowData} setOpen={setOpen} open={open} setStaffData={setStaffData} staffData={staffData}  updateUserMutation={updateUserMutation} />
             <Assure open={!!banBlock} handleOpen={() => setBanBlock("")} description={banBlock === "block" ? "This action will block the user. User will be completely prohibited from the page." : "This action will ban the user, they will only be able to access things for which they have paid."} onConfirm={() => { banBlock === "block" ? blockMutation.mutate() : banMutation.mutate(); }} />
         </>
     );

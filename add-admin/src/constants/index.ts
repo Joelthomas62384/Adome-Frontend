@@ -61,3 +61,13 @@ export const getTwoLetters = (full_name:string|undefined) => {
     return full_name[0];
   }
 };
+export const getLetters = (words: string): string => {
+  if (!words.trim()) return ''; 
+  
+
+  return words
+    .split(' ') 
+    .map(word => word.charAt(0)) 
+    .join('')
+    .toUpperCase();
+};

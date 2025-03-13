@@ -28,7 +28,7 @@ const Page = () => {
       url.search = searchParams.toString();
       window.location.href = url.toString();
     }
-  }, [stateParam]);  // Runs once when `stateParam` changes
+  }, [stateParam]);  
 
   const fetchAuth = async () => {
     if (stateParam !== "public") return;
@@ -37,6 +37,7 @@ const Page = () => {
       if (!code || !scope || !stateParam || !authUser) {
         throw new Error("Missing parameters");
       }
+      console.log(schemaName)
       const response = await axiosInstance.post(`user/${schemaName}/login`, {
         code,
         scope,
@@ -47,9 +48,10 @@ const Page = () => {
       if (response.data.app && response.data.app !== "public") {
         setSubdomain(response.data.app);
       }
-      
+      console.log(response)
       return response.data;
     } catch (error: any) {
+      console.log(error)
       toast({
         title: 'Error',
         description: error.message || 'Authentication failed',

@@ -13,8 +13,19 @@ export interface TenantFormType {
     courses?: boolean;     
 }
 
-export type SidebarType = { id: string; name: string; link: string; icon: JSX.Element }
-
+export type SidebarType = {
+     id: string;
+     name: string;
+     link: string; 
+     icon: JSX.Element
+     permission? : "hasStaffPermission" | "hasSettingPermission" | "hasBuilderPermission" | "hasBlogPermission" | "hasCommunityPermission" | "hasNewsletterPermission" | "hasCoursesPermission"
+ }
+//  hasStaffPermission: false,
+//  hasBlogPermission: false,
+//  hasCommunityPermission: false,
+//  hasNewsletterPermission: false,
+//  hasCoursesPermission: false,
+//  hasBuilderPermission : false
 export type tenantType = {
     id: number | null;
     name: string;
@@ -53,8 +64,25 @@ export type UsersType = {
     id : number
     is_staff : boolean
     is_admin : boolean
+    hasStaffPermission: boolean
+    hasBlogPermission: boolean
+    hasCommunityPermission: boolean
+    hasNewsletterPermission: boolean
+    hasCoursesPermission: boolean
+    hasBuilderPermission : boolean
+
     
 }
 
+
+export type staffPermission = {
+    hasStaffPermission: boolean
+    hasBlogPermission: boolean
+    hasCommunityPermission: boolean
+    hasNewsletterPermission: boolean
+    hasCoursesPermission: boolean
+    designation: string
+    is_staff: boolean
+}
 
 export type Role = "user" | "admin" | "staff";

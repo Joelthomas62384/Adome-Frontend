@@ -30,7 +30,7 @@ const TenantUserProvider = ({ children }: Props) => {
   useEffect(() => {
     
     if (!isLoading && !isError && data) {
-      dispatch(setUserData({ user: data.user || null, role:data.role,  isLoggedIn: true }));
+      dispatch(setUserData({ user: data || null, role:data.role,  isLoggedIn: true }));
       console.log(data , data.role    )
       setCookie('user_email',data.user.email)
     } else if (!isLoading && isError) {
