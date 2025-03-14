@@ -1,6 +1,7 @@
 "use client";
 
 import axiosInstance from "@/axios/public-instance";
+import LoadingPage from "@/components/global/loading-page";
 import { getSubdomain } from "@/constants";
 import { setUserData } from "@/Redux/slices/user-details";
 import { useQuery } from "@tanstack/react-query";
@@ -43,7 +44,9 @@ const TenantUserProvider = ({ children }: Props) => {
   }, [data, isLoading, isError, dispatch]);
   
 
-  return <>{children}</>;
+  return <>{
+    isLoading? <LoadingPage /> : children
+  }</>;
 };
 
 export default TenantUserProvider;

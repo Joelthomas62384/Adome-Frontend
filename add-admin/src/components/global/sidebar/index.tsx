@@ -34,7 +34,7 @@ const Sidebar = () => {
   ]
 
   const menuFilter = (menuItems:SidebarType[]) => {
-    console.log(user)
+    // console.log(user)
     return menuItems.filter((item) => {
       
       if (user?.is_admin) {

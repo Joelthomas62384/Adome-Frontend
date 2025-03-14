@@ -18,6 +18,7 @@ const TenantsAdminLayout = ({children}: {children : React.ReactNode}) => {
 
     <TenantAdminLoginCheck>
 
+        <PrivateRoutes allowedRoles={['staff' , 'admin']}>
       <div className='h-screen overflow-hidden'>
       <Sidebar />
       <div className="md:pl-[300px]">
@@ -25,14 +26,13 @@ const TenantsAdminLayout = ({children}: {children : React.ReactNode}) => {
           
           />
         <div className="relative">
-          <PrivateRoutes allowedRoles={['staff' , 'admin']}>
 
           <BlurPage>{children}</BlurPage>
 
-          </PrivateRoutes>
         </div>
       </div>
       </div>
+          </PrivateRoutes>
 </TenantAdminLoginCheck>
         
   )
