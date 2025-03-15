@@ -1,40 +1,37 @@
+"use client"
+
+import { usePathname } from "next/navigation"
 import BlurPage from '@/components/backgrou-blur'
-import BackdropGradient from '@/components/global/backdrop-gradiant'
 import InfoBar from '@/components/global/infobar'
 import Sidebar from '@/components/global/sidebar'
-import SideBarComponent from '@/components/global/sidebar'
-import { SidebarProvider } from '@/components/ui/sidebar'
 import PrivateRoutes from '@/privateRoutes/admin-routes'
 import TenantAdminLoginCheck from '@/providers/tenant-admin-login-provider'
 import React from 'react'
-// import LandingPageNavbar from './_components/navbar'
+// import "@/styles/grapes.css"
 
-type Props = {}
+const TenantsAdminLayout = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname()
 
-const TenantsAdminLayout = ({children}: {children : React.ReactNode}) => {
+  const isWebsiteBuilder = pathname.startsWith("/admin/builder/")
+
   return (
-
-    
-
     <TenantAdminLoginCheck>
+      <PrivateRoutes allowedRoles={['staff', 'admin']}>
+        <div className='h-screen overflow-hidden'>
 
-        <PrivateRoutes allowedRoles={['staff' , 'admin']}>
-      <div className='h-screen overflow-hidden'>
-      <Sidebar />
-      <div className="md:pl-[300px]">
-        <InfoBar
+          {!isWebsiteBuilder && <Sidebar />}
           
-          />
-        <div className="relative">
+          <div className={isWebsiteBuilder ? "w-full" : "md:pl-[300px]"}>
+            {!isWebsiteBuilder && <InfoBar />}
 
-          <BlurPage>{children}</BlurPage>
+            <div className="relative">
+              {isWebsiteBuilder ? children : <BlurPage>{children}</BlurPage>}
+            </div>
+          </div>
 
         </div>
-      </div>
-      </div>
-          </PrivateRoutes>
-</TenantAdminLoginCheck>
-        
+      </PrivateRoutes>
+    </TenantAdminLoginCheck>
   )
 }
 

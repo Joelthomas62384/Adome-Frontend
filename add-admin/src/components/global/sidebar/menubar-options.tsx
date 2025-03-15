@@ -30,7 +30,7 @@ const MenuOptions = ({ defaultOpen, sidebarLogo, sidebarOpt }: Props) => {
     if (!isMounted) return
 
     return (
-        <Sheet modal={false}  {...openState}>
+        <Sheet  modal={false}  {...openState}>
             <SheetTrigger asChild className="absolute left-4 top-4 z-[100] md:!hidden flex">
                 <Button variant={'outline'} size={'icon'}>
                     <Menu />
@@ -38,9 +38,10 @@ const MenuOptions = ({ defaultOpen, sidebarLogo, sidebarOpt }: Props) => {
             </SheetTrigger>
 
             <SheetContent
+            showX={false}
                 side={'left'}
                 className={clsx(
-                    'bg-themeBlack backdrop-blur-xl fixed top-0 border-r-[1px] p-6',
+                    'bg-themeBlack backdrop-blur-xl fixed top-0 border-r-[1px] p-6 ring-0',
                     {
                         'hidden md:inline-block z-0 w-[300px]': defaultOpen,
                         'inline-block md:hidden z-[100] w-full': !defaultOpen,

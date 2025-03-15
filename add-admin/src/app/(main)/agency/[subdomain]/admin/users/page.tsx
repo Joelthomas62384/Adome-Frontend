@@ -4,7 +4,7 @@ import axiosInstance from "@/axios/public-instance";
 import DataTable from "@/app/(main)/agency/[subdomain]/admin/users/_components/data-table";
 import { getSubdomain } from "@/constants";
 import { columns } from "./_components/columns";
-import { useRef, useCallback, useState, useEffect } from "react";
+import { useRef, useCallback, useState,  useTransition } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Spinner } from "@/app/components/ui/spinner";
 import { Search } from "lucide-react";
@@ -21,13 +21,14 @@ const Page = () => {
   const [selectStaff, setSelectStaff] = useState("user");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [isPending, startTransition] = useTransition(); 
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [search]);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    startTransition(() => {
+      setDebouncedSearch(e.target.value);
+    });
+  };
 
   const fetchUsers = async ({ pageParam = 1 }) => {
     const response = await axiosInstance.get(
@@ -71,9 +72,9 @@ const Page = () => {
           <Search />
           <Input
             placeholder="Search..."
-            className="outline-none focus:outline-none focus:ring-0 focus:ring-transparent focus:shadow-none active:ring-0"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={search} 
+            onChange={handleSearchChange}
+            className="outline-none focus:outline-none focus:ring-0 focus:ring-transparent focus:shadow-none active:ring-0" 
           />
         </div>
         <Select defaultValue="user" onValueChange={setSelectStaff}>
@@ -91,7 +92,7 @@ const Page = () => {
         </Select>
       </div>
 
-      <DataTable columns={columns} data={data?.pages.flatMap((page) => page.users) || []} filterValue="Username" isLoading={isLoading} />
+      <DataTable columns={columns} data={data?.pages.flatMap((page) => page.users) || []} filterValue="Username" isLoading={isLoading || isPending} />
 
       {hasNextPage && (
         <div ref={lastUserRef} className="w-full flex items-center justify-center p-4">

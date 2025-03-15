@@ -1,19 +1,31 @@
-"use client"
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import localforage from "localforage"; // Uses IndexedDB
+import { persistReducer, persistStore } from "redux-persist";
+import userProvider from "./slices/user-details";
+import appProvider from "./slices/app-details";
 
-import { configureStore , combineReducers } from "@reduxjs/toolkit"
-import userProivder from "./slices/user-details"
-import appProvider from "./slices/app-details"
+const persistConfig = {
+    key: "root",
+    storage: localforage, 
+    whitelist: ["user", "app"], 
+};
 
 const RootReducer = combineReducers({
-    user: userProivder,
+    user: userProvider,
     app: appProvider,
-})
+});
 
+const persistedReducer = persistReducer(persistConfig, RootReducer);
 
 export const store = configureStore({
-    reducer : RootReducer
-})
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false, 
+        }),
+});
 
+export const persistor = persistStore(store);
 
-export type RootState = ReturnType<typeof RootReducer>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
