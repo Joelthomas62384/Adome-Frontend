@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { HexColorPicker } from "react-colorful";
 import { EditorState } from "@/providers/editor/editor-provider";
@@ -45,6 +45,7 @@ const BackgroundColorPicker = ({ dispatch , state,bgImage=false ,id:PropId}: Pro
     },
   })
   };
+  const [color, setColor] = useState('')
 
   const solids = [
     '#E2E2E2',
@@ -59,7 +60,7 @@ const BackgroundColorPicker = ({ dispatch , state,bgImage=false ,id:PropId}: Pro
 
   const gradients = [
     'linear-gradient(to top left, #accbee, #e7f0fd)',
-    'linear-gradient(to top left, #d5d4d0, #d5d4d0, #eeeeec)',
+    'linear-gradient(to top left, #d5d4d0, #eeeeec)',
     'linear-gradient(to top left, #000000, #434343)',
     'linear-gradient(to top left, #09203f, #537895)',
     'linear-gradient(to top left, #AC32E4, #7918F2, #4801FF)',
@@ -75,15 +76,32 @@ const BackgroundColorPicker = ({ dispatch , state,bgImage=false ,id:PropId}: Pro
     'linear-gradient(to top left, #fcc5e4, #fda34b, #ff7882, #c8699e, #7046aa, #0c1db8, #020f75)',
     'linear-gradient(to top left, #ff75c3, #ffa647, #ffe83f, #9fff5b, #70e2ff, #cd93ff)',
     'linear-gradient(to right, #DAD299, #B0DAB9)',
-    // Additional gradients from popular collections:
-    'linear-gradient(to right, #bdc3c7, #2c3e50)',       // 50 Shades of Grey :contentReference[oaicite:0]{index=0}
-    'linear-gradient(to right, #2980B9, #6DD5FA, #FFFFFF)', // Cool Sky :contentReference[oaicite:1]{index=1}
-    'linear-gradient(to right, #2774ae, #002E5D, #002E5D)',  // Dark Blue Gradient :contentReference[oaicite:2]{index=2}
-    'linear-gradient(to right, #434343, #000000)',          // Premium Dark :contentReference[oaicite:3]{index=3}
-    'linear-gradient(to right, #833ab4, #fd1d1d, #fcb045)',  // Instagram :contentReference[oaicite:4]{index=4}
-    'linear-gradient(to right, #b224ef, #7579ff)',           // Smart Indigo :contentReference[oaicite:5]{index=5}
-    'linear-gradient(to right, #ed6ea0, #ec8c69)',           // Colorful Peach :contentReference[oaicite:6]{index=6}
-    'linear-gradient(to right, #E3FDF5, #FFE6FA)'            // Perfect White :contentReference[oaicite:7]{index=7}
+    'linear-gradient(to right, #bdc3c7, #2c3e50)',       // 50 Shades of Grey
+    'linear-gradient(to right, #2980B9, #6DD5FA, #FFFFFF)', // Cool Sky
+    'linear-gradient(to right, #2774ae, #002E5D, #002E5D)',  // Dark Blue Gradient
+    'linear-gradient(to right, #434343, #000000)',          // Premium Dark
+    'linear-gradient(to right, #833ab4, #fd1d1d, #fcb045)',  // Instagram
+    'linear-gradient(to right, #b224ef, #7579ff)',           // Smart Indigo
+    'linear-gradient(to right, #ed6ea0, #ec8c69)',           // Colorful Peach
+    'linear-gradient(to right, #E3FDF5, #FFE6FA)',           // Perfect White
+    'linear-gradient(to right, #ff9a9e, #fad0c4)',           // Peach Love
+    'linear-gradient(to right, #ffdde1, #ee9ca7)',           // Sweet Pink
+    'linear-gradient(to right, #ff758c, #ff7eb3)',           // Rosy Pink
+    'linear-gradient(to right, #69ff97, #00e4ff)',           // Aqua Breeze
+    'linear-gradient(to right, #fa709a, #fee140)',           // Sunset Glow
+    'linear-gradient(to right, #a8edea, #fed6e3)',          // Soft Mint
+    'linear-gradient(to right, #6a11cb, #2575fc)',          // Electric Violet
+    'linear-gradient(to right, #ff6a00, #ee0979)',          // Flamingo Burst
+    'linear-gradient(to right, #1e9600, #fff200, #ff0000)', // Traffic Light
+    'linear-gradient(to right, #d53369, #cbad6d)',          // Cherry Wine
+    'linear-gradient(to right, #1a2980, #26d0ce)',          // Deep Ocean
+    'linear-gradient(to right, #360033, #0b8793)',          // Purple Haze
+    'linear-gradient(to right, #ff512f, #dd2476)',          // Blood Orange
+    'linear-gradient(to right, #1f4037, #99f2c8)',          // Jungle Mist
+    'linear-gradient(to right, #4b6cb7, #182848)',          // Royal Blue
+    'linear-gradient(to right, #de6262, #ffb88c)',          // Sunset Pink
+    'linear-gradient(to right, #02aab0, #00cdac)',          // Seagreen Splash
+    'linear-gradient(to right, #ffb347, #ffcc33)',          // Sunshine
   ];
   
 
@@ -93,7 +111,21 @@ const BackgroundColorPicker = ({ dispatch , state,bgImage=false ,id:PropId}: Pro
     'url(https://images.unsplash.com/photo-1688822863426-8c5f9b257090?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90)',
     'url(https://images.unsplash.com/photo-1691225850735-6e4e51834cad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90)',
   ]
+  const [alpha, setAlpha] = useState(0.1)
 
+
+  const hexToRgba = (hex: string, alpha: number) => {
+    let r = parseInt(hex.substring(1, 3), 16);
+    let g = parseInt(hex.substring(3, 5), 16);
+    let b = parseInt(hex.substring(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+  useEffect(() => {
+    const newColor = hexToRgba(color, alpha)
+    handleColorChange(newColor)
+    
+  }, [color, alpha])
+  
 
   return (
     <Popover>
@@ -117,6 +149,9 @@ const BackgroundColorPicker = ({ dispatch , state,bgImage=false ,id:PropId}: Pro
             </TabsTrigger>
             <TabsTrigger className="flex-1" value="gradient">
               Gradient
+            </TabsTrigger>
+            <TabsTrigger className="flex-1" value="custom">
+              Custom
             </TabsTrigger>
          { bgImage &&    <TabsTrigger className="flex-1" value="image">
               Image
@@ -163,6 +198,13 @@ const BackgroundColorPicker = ({ dispatch , state,bgImage=false ,id:PropId}: Pro
             </div>
 
            
+          </TabsContent>
+
+          <TabsContent value="custom">
+  <HexColorPicker className="scale-75" color={color} onChange={setColor} />
+
+
+
           </TabsContent>
 
          

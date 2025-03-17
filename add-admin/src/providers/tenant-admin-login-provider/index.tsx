@@ -25,22 +25,21 @@ const TenantAdminLoginCheck = ({ children }: Props) => {
 
     const exp = getCookie('expiry')
     useEffect(() => {
-        // dispatch(setAppInfo({schemaName : getSubdomain()}))
-        // getTenant()
-        if (exp && isLoggedIn){
-            setLoading(false)
-            
+        if (exp && isLoggedIn) {
+            setLoading(false);
+        } else if (!exp) {
+            router.push('/login');
+        } else if (exp && !isLoggedIn) {
+            // Check localStorage or session state
+            // const storedUser = localStorage.getItem("user");
+            // if (storedUser) {
+            //     dispatch(setUserData(JSON.parse(storedUser)));
+            // } else {
+            //     dispatch(setUserData({ isLoggedIn: true }));
+            // }
         }
-        if (!exp) {
-            router.push('/login')
-        }
-        if (exp && !isLoggedIn) {
-            dispatch(setUserData({ isLoggedIn: true }))
-        }
-
-        
-    }, [exp , isLoggedIn])
-
+    }, [exp, isLoggedIn]);
+    
 
 
     return (
