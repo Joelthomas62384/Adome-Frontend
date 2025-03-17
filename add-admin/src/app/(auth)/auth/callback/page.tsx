@@ -21,6 +21,7 @@ const Page = () => {
   const { toast } = useToast()
   const [subdomain, setSubdomain] = useState<string | null>(null)
   const { schemaName } = useSelector((state: RootState) => state.app)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (stateParam && stateParam !== "public" && typeof window !== 'undefined') {
@@ -49,6 +50,7 @@ const Page = () => {
         setSubdomain(response.data.app);
       }
       console.log(response)
+      setLoading(false);
       return response.data;
     } catch (error: any) {
       console.log(error)
@@ -78,7 +80,7 @@ const Page = () => {
     <div className="h-screen w-full flex items-center justify-center">
       <BackdropGradient className="pt-20 flex flex-col items-center gap-3">
         <Spinner size="large" />
-        <TenantCreateModal open={true} subdomain={subdomain} setSubdomain={setSubdomain} />
+       { !loading && <TenantCreateModal open={true} subdomain={subdomain} setSubdomain={setSubdomain} />}
       </BackdropGradient>
     </div>
   );

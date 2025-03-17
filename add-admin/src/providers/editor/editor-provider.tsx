@@ -45,7 +45,11 @@ const initialEditorState: EditorState['editor'] = {
             content: [],
             id: '__body',
             name: 'Body',
-            styles: {},
+            styles: {
+                background : 'white',
+                // padding: 0,
+                // margin: 0
+            },
             type: '__body',
         },
     ],

@@ -35,6 +35,8 @@ import {
 } from '@/components/ui/select'
 import { useEditor } from '@/providers/editor/editor-provider'
 import { Slider } from '@/components/ui/slider'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import BackgroundColorPicker from '@/components/editor/background-image-picker'
 
 type Props = {}
 
@@ -131,32 +133,58 @@ const SettingsTab = (props: Props) => {
               value={state.editor.selectedElement.styles.textAlign}
             >
               <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
-                <TabsTrigger
-                  value="left"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <AlignLeft size={18} />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="right"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <AlignRight size={18} />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="center"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <AlignCenter size={18} />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="justify"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted "
-                >
-                  <AlignJustify size={18} />
-                </TabsTrigger>
+                <TooltipProvider>
+                      <TabsTrigger
+                        value="left"
+                        className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+                      >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <AlignLeft size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent side="top">Align Left</TooltipContent>
+                  </Tooltip>
+                      </TabsTrigger>
+
+                      <TabsTrigger
+                        value="right"
+                        className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+                      >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <AlignRight size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent side="top">Align Right</TooltipContent>
+                  </Tooltip>
+                      </TabsTrigger>
+
+                      <TabsTrigger
+                        value="center"
+                        className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+                      >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <AlignCenter size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent side="top">Align Center</TooltipContent>
+                  </Tooltip>
+                      </TabsTrigger>
+
+                      <TabsTrigger
+                        value="justify"
+                        className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+                      >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <AlignJustify size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent side="top">Justify</TooltipContent>
+                  </Tooltip>
+                      </TabsTrigger>
+                </TooltipProvider>
               </TabsList>
             </Tabs>
+
           </div>
           <div className="flex flex-col gap-2">
             <p className="text-muted-foreground">Font Family</p>
@@ -168,11 +196,20 @@ const SettingsTab = (props: Props) => {
           </div>
           <div className="flex flex-col gap-2">
             <p className="text-muted-foreground">Color</p>
-            <Input
-              id="color"
-              onChange={handleOnChanges}
-              value={state.editor.selectedElement.styles.color}
-            />
+            <div className="flex  border-[1px] rounded-md overflow-clip">
+              <div
+                className="w-12 "
+                style={{
+                  backgroundColor:
+                    state.editor.selectedElement.styles.color,
+                }}
+              />
+              <Input
+                id="color"
+                onChange={handleOnChanges}
+                value={state.editor.selectedElement.styles.color}
+              />
+            </div>
           </div>
           <div className="flex gap-4">
             <div>
@@ -186,11 +223,12 @@ const SettingsTab = (props: Props) => {
                     },
                   })
                 }
+                defaultValue='normal'
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a weight" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className='bg-themeBlack'>
                   <SelectGroup>
                     <SelectLabel>Font Weights</SelectLabel>
                     <SelectItem value="bold">Bold</SelectItem>
@@ -349,13 +387,13 @@ const SettingsTab = (props: Props) => {
             <div className="flex items-center justify-end">
               <small className="p-2">
                 {typeof state.editor.selectedElement.styles?.opacity ===
-                'number'
+                  'number'
                   ? state.editor.selectedElement.styles?.opacity
                   : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.opacity || '0'
-                      ).replace('%', '')
-                    ) || 0}
+                    (
+                      state.editor.selectedElement.styles?.opacity || '0'
+                    ).replace('%', '')
+                  ) || 0}
                 %
               </small>
             </div>
@@ -372,10 +410,10 @@ const SettingsTab = (props: Props) => {
                 typeof state.editor.selectedElement.styles?.opacity === 'number'
                   ? state.editor.selectedElement.styles?.opacity
                   : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.opacity || '0'
-                      ).replace('%', '')
-                    ) || 0,
+                    (
+                      state.editor.selectedElement.styles?.opacity || '0'
+                    ).replace('%', '')
+                  ) || 0,
               ]}
               max={100}
               step={1}
@@ -386,13 +424,13 @@ const SettingsTab = (props: Props) => {
             <div className="flex items-center justify-end">
               <small className="">
                 {typeof state.editor.selectedElement.styles?.borderRadius ===
-                'number'
+                  'number'
                   ? state.editor.selectedElement.styles?.borderRadius
                   : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.borderRadius || '0'
-                      ).replace('px', '')
-                    ) || 0}
+                    (
+                      state.editor.selectedElement.styles?.borderRadius || '0'
+                    ).replace('px', '')
+                  ) || 0}
                 px
               </small>
             </div>
@@ -407,13 +445,13 @@ const SettingsTab = (props: Props) => {
               }}
               defaultValue={[
                 typeof state.editor.selectedElement.styles?.borderRadius ===
-                'number'
+                  'number'
                   ? state.editor.selectedElement.styles?.borderRadius
                   : parseFloat(
-                      (
-                        state.editor.selectedElement.styles?.borderRadius || '0'
-                      ).replace('%', '')
-                    ) || 0,
+                    (
+                      state.editor.selectedElement.styles?.borderRadius || '0'
+                    ).replace('%', '')
+                  ) || 0,
               ]}
               max={100}
               step={1}
@@ -422,30 +460,25 @@ const SettingsTab = (props: Props) => {
           <div className="flex flex-col gap-2">
             <Label className="text-muted-foreground">Background Color</Label>
             <div className="flex  border-[1px] rounded-md overflow-clip">
-              <div
-                className="w-12 "
-                style={{
-                  backgroundColor:
-                    state.editor.selectedElement.styles.backgroundColor,
-                }}
-              />
+
+                <BackgroundColorPicker state={state} id="background" dispatch = {dispatch}  />
               <Input
                 placeholder="#HFI245"
                 className="!border-y-0 rounded-none !border-r-0 mr-2"
                 id="backgroundColor"
                 onChange={handleOnChanges}
-                value={state.editor.selectedElement.styles.backgroundColor}
+                value={state.editor.selectedElement.styles.background}
               />
             </div>
           </div>
           <div className="flex flex-col gap-2">
             <Label className="text-muted-foreground">Background Image</Label>
             <div className="flex  border-[1px] rounded-md overflow-clip">
-              <div
+            <div
                 className="w-12 "
                 style={{
-                  backgroundImage:
-                    state.editor.selectedElement.styles.backgroundImage,
+                  backgroundColor:
+                    state.editor.selectedElement.styles.backgroundColor,
                 }}
               />
               <Input
@@ -471,26 +504,37 @@ const SettingsTab = (props: Props) => {
               value={state.editor.selectedElement.styles.backgroundSize?.toString()}
             >
               <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
-                <TabsTrigger
-                  value="cover"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <ChevronsLeftRightIcon size={18} />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="contain"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <AlignVerticalJustifyCenter size={22} />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="auto"
-                  className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-                >
-                  <LucideImageDown size={18} />
-                </TabsTrigger>
+                <TooltipProvider>
+                      <TabsTrigger value="cover" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <ChevronsLeftRightIcon size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Cover</TooltipContent>
+                  </Tooltip>
+                      </TabsTrigger>
+
+                      <TabsTrigger value="contain" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <AlignVerticalJustifyCenter size={22} />
+                    </TooltipTrigger>
+                    <TooltipContent>Contain</TooltipContent>
+                  </Tooltip>
+                      </TabsTrigger>
+
+                      <TabsTrigger value="auto" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                        <LucideImageDown size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Auto</TooltipContent>
+                  </Tooltip>
+                      </TabsTrigger>
+                </TooltipProvider>
               </TabsList>
             </Tabs>
+
           </div>
         </AccordionContent>
       </AccordionItem>
@@ -513,65 +557,93 @@ const SettingsTab = (props: Props) => {
             value={state.editor.selectedElement.styles.justifyContent}
           >
             <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
-              <TabsTrigger
-                value="space-between"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignHorizontalSpaceBetween size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="space-evenly"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignHorizontalSpaceAround size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="center"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignHorizontalJustifyCenterIcon size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="start"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted "
-              >
-                <AlignHorizontalJustifyStart size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="end"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted "
-              >
-                <AlignHorizontalJustifyEndIcon size={18} />
-              </TabsTrigger>
+              <TooltipProvider>
+                    <TabsTrigger value="space-between" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <AlignHorizontalSpaceBetween size={18} />
+                  </TooltipTrigger>
+                  <TooltipContent>Space Between</TooltipContent>
+                </Tooltip>
+                    </TabsTrigger>
+
+                    <TabsTrigger value="space-evenly" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <AlignHorizontalSpaceAround size={18} />
+                  </TooltipTrigger>
+                  <TooltipContent>Space Evenly</TooltipContent>
+                </Tooltip>
+                    </TabsTrigger>
+
+                    <TabsTrigger value="center" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <AlignHorizontalJustifyCenterIcon size={18} />
+                  </TooltipTrigger>
+                  <TooltipContent>Center</TooltipContent>
+                </Tooltip>
+                    </TabsTrigger>
+
+                    <TabsTrigger value="start" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <AlignHorizontalJustifyStart size={18} />
+                  </TooltipTrigger>
+                  <TooltipContent>Start</TooltipContent>
+                </Tooltip>
+                    </TabsTrigger>
+
+                    <TabsTrigger value="end" className="w-10 h-10 p-0 data-[state=active]:bg-muted">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <AlignHorizontalJustifyEndIcon size={18} />
+                  </TooltipTrigger>
+                  <TooltipContent>End</TooltipContent>
+                </Tooltip>
+                    </TabsTrigger>
+              </TooltipProvider>
             </TabsList>
           </Tabs>
+
           <Label className="text-muted-foreground">Align Items</Label>
-          <Tabs
-            onValueChange={(e) =>
-              handleOnChanges({
-                target: {
-                  id: 'alignItems',
-                  value: e,
-                },
-              })
-            }
-            value={state.editor.selectedElement.styles.alignItems}
-          >
-            <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
-              <TabsTrigger
-                value="center"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-              >
-                <AlignVerticalJustifyCenter size={18} />
-              </TabsTrigger>
-              <TabsTrigger
-                value="normal"
-                className="w-10 h-10 p-0 data-[state=active]:bg-muted "
-              >
-                <AlignVerticalJustifyStart size={18} />
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <TooltipProvider>
+            <Tabs
+              onValueChange={(e) =>
+                handleOnChanges({
+                  target: {
+                    id: 'alignItems',
+                    value: e,
+                  },
+                })
+              }
+              value={state.editor.selectedElement.styles.alignItems}
+            >
+              <TabsList className="flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4">
+
+                <TabsTrigger value="center" className="group w-10 h-10 p-0 data-[state=active]:bg-muted">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <AlignVerticalJustifyCenter size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Align Center</TooltipContent>
+                  </Tooltip>
+                </TabsTrigger>
+
+                <TabsTrigger value="normal" className="group w-10 h-10 p-0 data-[state=active]:bg-muted">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <AlignVerticalJustifyStart size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Align Start</TooltipContent>
+                  </Tooltip>
+                </TabsTrigger>
+
+              </TabsList>
+            </Tabs>
+          </TooltipProvider>
+
+
           <div className="flex items-center gap-2">
             <Input
               className="h-4 w-4"

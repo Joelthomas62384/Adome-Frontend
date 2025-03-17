@@ -48,7 +48,7 @@ const TextComponent = (props: Props) => {
       >
           {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
-          <Badge className="absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg">
+          <Badge className="absolute -top-[23px] bg-blue-600 text-white -left-[1px] rounded-none rounded-t-lg">
             {state.editor.selectedElement.name}
           </Badge>
         )}
@@ -76,7 +76,7 @@ const TextComponent = (props: Props) => {
 
       {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (
-          <div className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
+          <div className="absolute bg-blue-600  px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
             <Trash
               className="cursor-pointer"
               size={16}
