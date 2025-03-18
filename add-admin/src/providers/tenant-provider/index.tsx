@@ -19,14 +19,15 @@ const TenantProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   const { data: tenant, isLoading, isError } = useQuery({
-    queryKey: ["tenant"],
+    queryKey: ["tenant" , getSubdomain()],
     queryFn: fetchTenant,
     retry: false,
   });
 
   useEffect(() => {
     if (tenant?.logo) {
-      dispatch(setAppInfo({ tenant }));
+      console.log(tenant)
+      dispatch(setAppInfo({ tenant, schemaName:tenant.subdomain }));
 
       // Remove existing favicons properly
       const existingIcons = document.querySelectorAll("link[rel='icon'], link[rel='shortcut icon']");

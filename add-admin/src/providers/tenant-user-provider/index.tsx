@@ -15,14 +15,25 @@ type Props = {
 };
 
 const fetchTenantUser = async () => {
+try{
 
-  const { data } = await axiosInstance.get(`user/${getSubdomain()}/tenantuser`);
-  return data;
+  const response = await axiosInstance.get(`user/${getSubdomain()}/tenantuser`);
+  console.log(response)
+  if(response.data){
+    return response.data;
+  }else{
+    console.log(response)
+    throw new Error('Unable to fetch tenant user')
+  }
+}catch(err:any){
+  throw Error(err)
+}
+  
 };
 
 const TenantUserProvider = ({ children }: Props) => {
   const dispatch = useDispatch();
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError,  } = useQuery({
     queryKey: ["tenantUser"],
     queryFn: fetchTenantUser,
     retry: false,
@@ -31,11 +42,12 @@ const TenantUserProvider = ({ children }: Props) => {
   useEffect(() => {
     
     if (!isLoading && !isError && data) {
-      dispatch(setUserData({ user: data || null, role:data.role,  isLoggedIn: true }));
-      console.log(data , data.role    )
+      dispatch(setUserData({ user: data, role:data.role,  isLoggedIn: true }));
+      console.log(data , data.role)
       setCookie('user_email',data.user.email)
     } else if (!isLoading && isError) {
-      dispatch(setUserData({ user: null, isLoggedIn: false }));
+      // console.log(data)
+      // dispatch(setUserData({ user: null, isLoggedIn: false }));
     }
     if(data?.blocked){
       router.push('/404')

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Google } from "@/components/forms/TenantForm/icons"
 import { RootState } from "@/Redux/store"
 import { useSelector } from "react-redux"
+import { getSubdomain } from "@/constants"
 // import { Loader } from "../loader"
 
 type GoogleAuthButtonProps = {
@@ -14,7 +15,7 @@ type GoogleAuthButtonProps = {
 export const GoogleAuthButton = () => {
     const {schemaName} = useSelector((state:RootState) =>state.app)
     const googleSignup = ()=>{
-        window.location.href = `http://localhost/user/${schemaName}/login`
+        window.location.href = `http://localhost/user/${getSubdomain()}/login`
         return 
     }
 //   const { signUpWith, signInWith } = useGoogleAuth()

@@ -16,17 +16,25 @@ type Props = {}
 
 
 const getSubdomain = (): string => {
-    if (typeof window !== "undefined") {
-        const hostname = window.location.hostname; 
-        const parts = hostname.split(".");
-  
-        const localhostIndex = parts.indexOf("localhost");
-        if (localhostIndex > 0) {
-            return parts.slice(0, localhostIndex).join("."); 
-        }
-    }
-    return "public"; 
-  };
+  if (typeof window !== "undefined") {
+      const hostname = window.location.hostname; 
+      const parts = hostname.split(".");
+
+      if (hostname.includes("localhost")) {
+          if (parts.length > 2) {
+              return parts[0]; // Extract first part before "localhost"
+          }
+          return "public"; // Default subdomain
+      }
+
+      // Handle production domains (e.g., sub.domain.com)
+      if (parts.length > 2) {
+          return parts[0]; // Extract subdomain
+      }
+  }
+  return "public"; 
+};
+
   
 const Page = (props: Props) => {
     
@@ -37,10 +45,11 @@ const Page = (props: Props) => {
   const authUser = searchParams.get("authuser")
   const { toast } = useToast()
   const router = useRouter()
+  const {schemaName} = useSelector((state:RootState)=>state.app)
  
   
 //   const {schemaName} = useSelector((state: RootState) => state.app)
-const schemaName = getSubdomain()
+// const schemaName = getSubdomain()
 //   console.log(schemaName)
 
   const fetchAuth = async () => {

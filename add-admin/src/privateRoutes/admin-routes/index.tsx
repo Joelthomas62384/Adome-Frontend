@@ -12,14 +12,16 @@ type Props = {
 }
 
 const PrivateRoutes = ({ children, allowedRoles }: Props) => {
-  const user = useSelector((state: RootState) => state.user.user)
+  const user = useSelector((state: RootState) => state.user)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
+    console.log(user)
     if (user === null) {
-      router.replace('/login')
-    } else if (!allowedRoles.includes(user.role)) {
+      console.log("User state in PrivateRoutes:", user);
+      // router.replace('/login')
+    } else if (!allowedRoles.includes(user.user.role)) {
       router.replace('/403')
     } else {
       setLoading(false)

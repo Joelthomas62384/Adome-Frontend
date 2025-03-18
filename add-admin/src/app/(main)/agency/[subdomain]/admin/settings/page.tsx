@@ -75,7 +75,7 @@ const Page = () => {
   }, [tenant, form]);
   
   const updateTenant = async (updatedData:TenantFormType)=>{
-    const {data} = await axiosInstance.put(`tenant/${schemaName}/tenant/${subdomain}`,updatedData)
+    const {data} = await axiosInstance.put(`tenant/${subdomain}/tenant/${subdomain}`,updatedData)
     return data
   }
 
@@ -101,7 +101,7 @@ const Page = () => {
     onSuccess : (data : TenantFormType)=>{
       queryClient.invalidateQueries({ queryKey: ['tenant', schemaName] });
       
-      if (data) dispatch(setAppInfo({tenant : data}))
+      if (data) dispatch(setAppInfo({tenant : data , schemaName: tenant.subdomain}))
 
       
 

@@ -28,14 +28,15 @@ const TenantAdminLoginCheck = ({ children }: Props) => {
         if (exp && isLoggedIn) {
             setLoading(false);
         } else if (!exp) {
+            console.log("Expiry cookie")
             router.push('/login');
         } else if (exp && !isLoggedIn) {
+                dispatch(setUserData({ isLoggedIn: true }));
             // Check localStorage or session state
             // const storedUser = localStorage.getItem("user");
             // if (storedUser) {
             //     dispatch(setUserData(JSON.parse(storedUser)));
             // } else {
-            //     dispatch(setUserData({ isLoggedIn: true }));
             // }
         }
     }, [exp, isLoggedIn]);
