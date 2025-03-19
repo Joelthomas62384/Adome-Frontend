@@ -19,9 +19,16 @@ import {
   AlignLeft,
   AlignRight,
   AlignVerticalJustifyCenter,
+  AlignVerticalJustifyEnd,
   AlignVerticalJustifyStart,
   ChevronsLeftRightIcon,
+  Expand,
+  LayoutGrid,
+  LucideImage,
   LucideImageDown,
+  MapPin,
+  MoveHorizontal,
+  Square,
 } from 'lucide-react'
 import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs'
 import {
@@ -672,6 +679,123 @@ const SettingsTab = (props: Props) => {
             />
           </div>
         </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value='Position'   className="px-6 py-0  " >
+        <AccordionTrigger className="!no-underline">Position</AccordionTrigger>
+        <AccordionContent>
+          <Label className='text-muted-foreground'>Position</Label>
+          <Tabs
+           value={state.editor.selectedElement.styles.position || 'static'}
+          onValueChange={(e:any)=>{
+            if(state.editor.selectedElement.name !== "__body" ){
+              handleOnChanges({
+                target: {
+                  id: 'position',
+                  value: e,
+                },
+              });
+            }
+          }}
+          >
+            <TabsList className='flex items-center flex-row justify-between border-[1px] rounded-md bg-transparent h-fit gap-4'>
+              <TooltipProvider>
+                <TabsTrigger value='relative' className='w-10 h-10 p-0 data-[state=active]:bg-muted'>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <MoveHorizontal size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Relative</TooltipContent>
+                  </Tooltip>
+                </TabsTrigger>
+
+                <TabsTrigger value='absolute' className='w-10 h-10 p-0 data-[state=active]:bg-muted'>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Expand size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Absolute</TooltipContent>
+                  </Tooltip>
+                </TabsTrigger>
+                <TabsTrigger value='fixed' className='w-10 h-10 p-0 data-[state=active]:bg-muted'>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <MapPin size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Fixed</TooltipContent>
+                  </Tooltip>
+                </TabsTrigger>
+                <TabsTrigger value='sticky' className='w-10 h-10 p-0 data-[state=active]:bg-muted'>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Square size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Sticky</TooltipContent>
+                  </Tooltip>
+                </TabsTrigger>
+                <TabsTrigger value='static' className='w-10 h-10 p-0 data-[state=active]:bg-muted'>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <LayoutGrid size={18} />
+                    </TooltipTrigger>
+                    <TooltipContent>Static</TooltipContent>
+                  </Tooltip>
+                </TabsTrigger>
+              </TooltipProvider>
+            </TabsList>
+          </Tabs>
+          
+          <div className="flex flex-col gap-2">
+              <p>Positions px</p>
+              <div className="flex gap-4 flex-col">
+                <div className="flex gap-4">
+                  <div>
+                    <Label className="text-muted-foreground">Top</Label>
+                    <Input
+                      placeholder="px"
+                      id="top"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.paddingTop}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Bottom</Label>
+                    <Input
+                      placeholder="px"
+                      id="bottom"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.paddingBottom}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div>
+                    <Label className="text-muted-foreground">Left</Label>
+                    <Input
+                      placeholder="px"
+                      id="left"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.paddingLeft}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Right</Label>
+                    <Input
+                      placeholder="px"
+                      id="right"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.paddingRight}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+
+
+
+        </AccordionContent>
+
       </AccordionItem>
     </Accordion>
   )
