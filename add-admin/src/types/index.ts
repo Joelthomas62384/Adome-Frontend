@@ -86,3 +86,32 @@ export type staffPermission = {
 }
 
 export type Role = "user" | "admin" | "staff";
+
+
+// Define the structure of the state
+export interface ColorState {
+    color: string;
+    opacity: number;
+    gradient: boolean;
+    direction: string;
+    color1: string;
+    color2: string;
+    image: string;
+    opacity1: number;
+    opacity2: number;
+    selectedColor: number;
+  }
+  
+  // Define the possible action types
+  export type ColorAction =
+    | { type: "SET_COLOR"; payload: string }
+    | { type: "SET_GRADIENT"; payload: boolean }
+    | { type: "SET_DIRECTION"; payload: string }
+    | { type: "SET_OPACITY"; payload: number }
+    | { type: "SET_IMAGE"; payload: string }
+    | { type: "SET_COLOR1"; payload: string }
+    | { type: "SET_COLOR2"; payload: string }
+    | { type: "SET_OPACITY1"; payload: number }
+    | { type: "SET_OPACITY2"; payload: number }
+    | {type : "SET_SELECTED_COLOR"; payload: number }
+    | { type: "RESET" }; // To reset the state

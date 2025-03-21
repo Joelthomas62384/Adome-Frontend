@@ -67,7 +67,7 @@ const Container = ({ element }: Props) => {
       }
 
       const handleDragStart = (e: React.DragEvent, type: string) => {
-        if (type === '__body') return
+        if (type === '__body' || state.editor.liveMode || state.editor.previewMode) return
         e.dataTransfer.setData('componentType', type)
       }
 
@@ -113,7 +113,7 @@ const Container = ({ element }: Props) => {
         })}
         onDrop={(e) => handleOnDrop(e, id)}
         onDragOver={handleDragOver}
-        draggable={type !== '__body'}
+        draggable={type !== '__body' && !state.editor.liveMode && !state.editor.previewMode}
         onClick={handleOnClickBody}
         onDragStart={(e) => handleDragStart(e, 'container')}
       >

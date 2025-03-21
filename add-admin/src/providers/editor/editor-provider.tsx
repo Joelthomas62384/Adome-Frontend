@@ -47,7 +47,7 @@ const initialEditorState: EditorState['editor'] = {
             name: 'Body',
             styles: {
                 background : 'white',
-                // padding: 0,
+                // padding: initialEditorState.liveMode && 0,
                 // margin: 0
             },
             type: '__body',
@@ -260,27 +260,55 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
               }
               return changedDeviceState
         
-        case 'TOGGLE_PREVIEW_MODE':
-              const toggleState = {
-                ...state,
-                editor: {
-                  ...state.editor,
-                  previewMode: !state.editor.previewMode,
-                },
-              }
-              return toggleState
+              case "TOGGLE_PREVIEW_MODE":
+                return {
+                    ...state,
+                    editor: {
+                        ...state.editor,
+                        previewMode: !state.editor.previewMode,
+                        elements: state.editor.elements.map((element) =>
+                            element.id === "__body"
+                                ? {
+                                    ...element,
+                                    styles: {
+                                        ...element.styles,
+                                        padding: !state.editor.previewMode ? 0 : undefined,
+                                    },
+                                }
+                                : element
+                        ),
+                    },
+                };
             
-        case "TOGGLE_LIVE_MODE":
-            const toggleLiveMode: EditorState = {
-                ...state,
-                editor: {
-                  ...state.editor,
-                  liveMode: action.payload
-                    ? action.payload.value
-                    : !state.editor.liveMode,
-                },
-              }
-              return toggleLiveMode
+            
+              case "TOGGLE_LIVE_MODE":
+                return {
+                    ...state,
+                    editor: {
+                        ...state.editor,
+                        liveMode: action.payload
+                            ? action.payload.value
+                            : !state.editor.liveMode,
+                        elements: state.editor.elements.map(element => 
+                            element.id === "__body" 
+                                ? {
+                                    ...element,
+                                    styles: {
+                                        ...element.styles,
+                                        padding: action.payload 
+                                            ? action.payload.value 
+                                                ? 0 
+                                                : undefined
+                                            : !state.editor.liveMode 
+                                                ? 0 
+                                                : undefined,
+                                    }
+                                }
+                                : element
+                        )
+                    },
+                };
+            
         
         case "REDO":
             if (state.history.currentIndex < state.history.history.length - 1) {

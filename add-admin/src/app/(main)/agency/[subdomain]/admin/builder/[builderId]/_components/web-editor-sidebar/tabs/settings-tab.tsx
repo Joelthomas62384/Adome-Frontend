@@ -746,7 +746,7 @@ const SettingsTab = (props: Props) => {
           </Tabs>
           
           <div className="flex flex-col gap-2">
-              <p>Positions px</p>
+              <p>Positions</p>
               <div className="flex gap-4 flex-col">
                 <div className="flex gap-4">
                   <div>
@@ -755,7 +755,7 @@ const SettingsTab = (props: Props) => {
                       placeholder="px"
                       id="top"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingTop}
+                      value={state.editor.selectedElement.styles.top}
                     />
                   </div>
                   <div>
@@ -764,7 +764,7 @@ const SettingsTab = (props: Props) => {
                       placeholder="px"
                       id="bottom"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingBottom}
+                      value={state.editor.selectedElement.styles.bottom}
                     />
                   </div>
                 </div>
@@ -775,7 +775,7 @@ const SettingsTab = (props: Props) => {
                       placeholder="px"
                       id="left"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingLeft}
+                      value={state.editor.selectedElement.styles.left}
                     />
                   </div>
                   <div>
@@ -784,12 +784,21 @@ const SettingsTab = (props: Props) => {
                       placeholder="px"
                       id="right"
                       onChange={handleOnChanges}
-                      value={state.editor.selectedElement.styles.paddingRight}
+                      value={state.editor.selectedElement.styles.right}
                     />
                   </div>
                 </div>
               </div>
             </div>
+            <div>
+                    <Label className="text-muted-foreground">Z Index</Label>
+                    <Input
+                      placeholder="0"
+                      id="zIndex"
+                      onChange={handleOnChanges}
+                      value={state.editor.selectedElement.styles.zIndex}
+                    />
+                  </div>
         
 
 
