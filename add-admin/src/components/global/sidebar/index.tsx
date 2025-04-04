@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { User } from "lucide-react"
+import { BookOpen, User } from "lucide-react"
 import { useSelector } from "react-redux"
 import { RootState } from "@/Redux/store"
 import { SidebarType } from "@/types"
@@ -13,8 +13,9 @@ const Sidebar = () => {
   const tenant = useSelector((state: RootState) => state.app.tenant)
   const menuItems: SidebarType[] = [
     { id: "1", name: "Dashboard", link: "/admin/", icon: <HomeDuoToneWhite /> },
-    { id: "2", name: "Users", link: "/admin/users", icon: <User color="white" />, permission: "hasStaffPermission" },
+    { id: "2", name: "Users", link: "/admin/users", icon: <User className="text-themeTextGray"/>, permission: "hasStaffPermission" },
     { id: "4", name: "Website Builder", link: "/admin/builder", icon: <GlobeDuoToneBlack />, permission: "hasBuilderPermission" },
+    { id: "5", name: "Blog", link: "/admin/blog", icon: <BookOpen className="text-themeTextGray"  size={20}/>, permission: "hasSettingPermission" },
     { id: "3", name: "Settings", link: "/admin/settings", icon: <Settings />, permission: "hasSettingPermission" },
   ]
 

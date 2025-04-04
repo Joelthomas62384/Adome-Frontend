@@ -10,7 +10,9 @@ import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import { ColorAction, ColorState } from "@/types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { MoveDown, MoveLeft, MoveRight, MoveUp } from "lucide-react";
+import { AlignCenter, AlignVerticalJustifyCenter, ChevronsLeftRightIcon, LucideImageDown, MoveDown, MoveLeft, MoveRight, MoveUp } from "lucide-react";
+import { Input } from "../ui/input";
+import { parseBackground } from "./get_initialStateProp";
 
 
 type Props = {
@@ -86,18 +88,31 @@ const images = [
 ]
 
 const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }: Props) => {
+  const background = state.editor.selectedElement.styles.background || "";
+  const {
+    gradient,
+    direction,
+    color1,
+    color2,
+    opacity1,
+    opacity2,
+    image,
+    ImageSize,
+  } = parseBackground(background);
+  // console.log(gradient)
 
   const initialState: ColorState = {
     color: "",
     opacity: 1,
-    gradient: false,
-    direction: "to right",
-    color1: "#ffffff",
-    color2: "#ffffff",
-    image: "",
-    opacity1: 1,
-    opacity2: 1,
+    gradient: gradient,
+    direction: direction,
+    color1: color1,
+    color2: color2,
+    image: image,
+    opacity1: opacity1,
+    opacity2: opacity2,
     selectedColor: 1,
+    ImageSize : ImageSize
   }
   const reducer = (state: ColorState, action: ColorAction): ColorState => {
     switch (action.type) {
@@ -105,7 +120,7 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
         // console.log("action " + action.payload)
         return { ...state, color: action.payload };
       case "SET_GRADIENT":
-        return { ...state, gradient: action.payload ,color1: action.payload ? state.color || "#ffffff" : state.color1,};
+        return { ...state, gradient: action.payload, color1: action.payload ? state.color || "#ffffff" : state.color1, };
       case "SET_DIRECTION":
         return { ...state, direction: action.payload };
       case "SET_OPACITY":
@@ -122,6 +137,11 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
         return { ...state, opacity2: action.payload };
       case "SET_SELECTED_COLOR":
         return { ...state, selectedColor: action.payload };
+      case "SET_IMAGE_SIZE":
+        return {
+         ...state,
+          ImageSize: action.payload
+        }
       case "RESET":
         return initialState;
       default:
@@ -163,6 +183,9 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
   };
 
 
+  
+
+
 
 
   const hexToRgba = (hex: string, alpha: number) => {
@@ -185,33 +208,39 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
     // setColor(newColor);
     console.log(newColor)
     // handleColorChangeCallback(newColor);
-    if (colorState.gradient){
+    if (colorState.gradient) {
       if (colorState.selectedColor === 1) {
         colorDispatch({ type: 'SET_COLOR1', payload: newColor })
       } else {
         colorDispatch({ type: 'SET_COLOR2', payload: newColor })
       }
-    }else{
+    } else {
       colorDispatch({ type: 'SET_COLOR', payload: newColor })
     }
 
 
   };
 
+
+
+
   useEffect(() => {
-    if(colorState.gradient){
-      const color = `linear-gradient(${colorState.direction}, ${hexToRgba(colorState.color1 , colorState.opacity1)}, ${hexToRgba(colorState.color2 , colorState.opacity2)}) `
+    if (colorState.gradient) {
+      let color = `linear-gradient(${colorState.direction}, ${hexToRgba(colorState.color1, colorState.opacity1)}, ${hexToRgba(colorState.color2, colorState.opacity2)}) `
+      if (colorState.image){
+        color += `, url("${colorState.image}") no-repeat center / ${colorState.ImageSize}`
+      }
       // console.log(color)
       console.log(color)
       handleColorChange(color)
 
-    }else{
+    } else {
       const color = hexToRgba(colorState.color, colorState.opacity)
       // console.log(color)
       handleColorChange(color)
     }
   }, [colorState])
-  
+
 
   const colorValue = (): string => {
     if (colorState.gradient) {
@@ -223,6 +252,11 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
     }
     return colorState.color
   }
+
+  const onImageChange= (e:any)=>{
+    colorDispatch({ type: 'SET_IMAGE', payload: e.target.value })
+  }
+
 
   const getOpacity = (): number => {
     if (colorState.gradient) {
@@ -253,7 +287,7 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
         <div
           className="w-12  rounded border cursor-pointer"
           style={{
-            background:   state.editor.selectedElement.styles[PropId as keyof React.CSSProperties] ,
+            background: state.editor.selectedElement.styles[PropId as keyof React.CSSProperties],
           }}
         />
 
@@ -338,123 +372,198 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
 
             />
 
-           {PropId==='background' && <div className="my-4 flex justify-between">
+            {PropId === 'background' && <div className="my-4 flex justify-between">
               <Label className="text-muted-foreground">Gradiant</Label>
               <Switch checked={colorState.gradient} onCheckedChange={() => {
                 colorDispatch({ type: 'SET_GRADIENT', payload: !colorState.gradient })
 
               }} />
             </div>}
-         
-         
-         {PropId==='background' &&  colorState.gradient && 
-           <>
-              <TooltipProvider
-
-              >
-
-                <Label className="text-muted-foreground">Color</Label>
-                <Tabs value={colorState.selectedColor === 1 ? '1' : '2'} onValueChange={(val) => {
-                  colorDispatch({ type: 'SET_SELECTED_COLOR', payload: Number(val) })
-
-                }}>
-                  <TabsList className="flex items-center flex-row justify-between border-[1px]  rounded-md bg-transparent h-fit gap-2">
-                    <Tooltip>
-
-                      <TooltipTrigger>
-
-                        <TabsTrigger className="w-10 h-9 p-0 data-[state=active]:bg-muted" value="1"  >
-
-                          C1
-                        </TabsTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>Color one</TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger>
 
 
-                        <TabsTrigger className="w-10 h-9 p-0 data-[state=active]:bg-muted" value="2" >
-                          C2
-                        </TabsTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>Color two</TooltipContent>
-                    </Tooltip>
-                  </TabsList>
+            {PropId === 'background' && colorState.gradient &&
+              <>
+                <TooltipProvider
+
+                >
+
+                  <Label className="text-muted-foreground">Color</Label>
+                  <Tabs value={colorState.selectedColor === 1 ? '1' : '2'} onValueChange={(val) => {
+                    colorDispatch({ type: 'SET_SELECTED_COLOR', payload: Number(val) })
+
+                  }}>
+                    <TabsList className="flex items-center flex-row justify-between border-[1px]  rounded-md bg-transparent h-fit gap-2">
+                      <Tooltip>
+
+                        <TooltipTrigger>
+
+                          <TabsTrigger className="w-10 h-9 p-0 data-[state=active]:bg-muted" value="1"  >
+
+                            C1
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>Color one</TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger>
 
 
-                </Tabs>
-              </TooltipProvider>
-
-              <Label className="text-muted-foreground">Direction</Label>
-              <TooltipProvider
-
-              >
-
-                <Tabs value={colorState.direction} onValueChange={(val) => {
-                  colorDispatch({ type: 'SET_DIRECTION', payload: val })
-
-                }}>
-                  <TabsList className="flex items-center flex-row justify-between border-[1px]  rounded-md bg-transparent h-fit gap-2">
-                    <Tooltip>
-
-                      <TooltipTrigger>
-
-                        <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to left" >
-
-                          <MoveLeft size={18} />
-                        </TabsTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>To Left</TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger>
+                          <TabsTrigger className="w-10 h-9 p-0 data-[state=active]:bg-muted" value="2" >
+                            C2
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>Color two</TooltipContent>
+                      </Tooltip>
+                    </TabsList>
 
 
-                        <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to right">
-                          <MoveRight size={18} />
-                        </TabsTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>To Right</TooltipContent>
-                    </Tooltip>
+                  </Tabs>
+                </TooltipProvider>
 
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to top">
-                          <MoveUp size={18} />
-                        </TabsTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>To Top</TooltipContent>
-                    </Tooltip>
+                <Label className="text-muted-foreground">Direction</Label>
+                <TooltipProvider
 
+                >
 
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to bottom">
-                          <MoveDown size={18} />
-                        </TabsTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>To Bottom</TooltipContent>
-                    </Tooltip>
+                  <Tabs value={colorState.direction} onValueChange={(val) => {
+                    colorDispatch({ type: 'SET_DIRECTION', payload: val })
 
+                  }}>
+                    <TabsList className="flex items-center flex-row justify-between border-[1px]  rounded-md bg-transparent h-fit gap-2">
+                      <Tooltip>
 
+                        <TooltipTrigger>
 
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to left" >
 
-                  </TabsList>
+                            <MoveLeft size={18} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>To Left</TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger>
 
 
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to right">
+                            <MoveRight size={18} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>To Right</TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to top">
+                            <MoveUp size={18} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>To Top</TooltipContent>
+                      </Tooltip>
 
 
-                </Tabs>
-              </TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="to bottom">
+                            <MoveDown size={18} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>To Bottom</TooltipContent>
+                      </Tooltip>
 
 
 
 
 
-            </> }
+                    </TabsList>
+
+
+
+
+                  </Tabs>
+                </TooltipProvider>
+
+                <div>
+                  <Label className="text-muted-foreground">Image</Label>
+                  <Input
+                    placeholder="https://placeholder-image.com"
+                    // id="top"
+                    onChange={onImageChange}
+                    value={colorState.image}
+                  />
+                </div>
+
+
+                <Label className="text-muted-foreground">BackGround Size</Label>
+
+                <TooltipProvider>
+                  <Tabs value={colorState.direction} onValueChange={(val) => {
+                    colorDispatch({ type: 'SET_IMAGE_SIZE', payload: val })
+
+                  }}>
+                    <TabsList className="flex items-center flex-row justify-between border-[1px]  rounded-md bg-transparent h-fit gap-2">
+                      <Tooltip>
+
+                        <TooltipTrigger>
+
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="cover" >
+
+                          <ChevronsLeftRightIcon size={18} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>Cover</TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger>
+
+
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="contain">
+                          <AlignVerticalJustifyCenter size={22} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>Contain</TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="center">
+                          <AlignCenter size={18} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>Center</TooltipContent>
+                      </Tooltip>
+
+
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <TabsTrigger className="w-10 h-10 p-0 data-[state=active]:bg-muted" value="auto">
+                              <LucideImageDown size={18} />
+                          </TabsTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>Auto</TooltipContent>
+                      </Tooltip>
+
+
+
+
+
+                    </TabsList>
+
+
+
+
+                  </Tabs>
+                </TooltipProvider>
+
+
+
+
+
+
+              </>}
 
           </TabsContent>
 

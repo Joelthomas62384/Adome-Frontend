@@ -9,6 +9,7 @@ import { Toaster } from "@/app/components/ui/toaster";
 import LoginCheck from "@/providers/login-check";
 import withProgress from "@/providers/progressbar-provider";
 import ProgressBarProvider from "@/providers/progressbar-provider";
+import { Toaster as Sonner } from "@/components/ui/sonner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
     </LoginCheck>
           </ReactQueryProvider>
         </ReduxProvider>
+        <Sonner  />
         <Toaster />
 
       </body>

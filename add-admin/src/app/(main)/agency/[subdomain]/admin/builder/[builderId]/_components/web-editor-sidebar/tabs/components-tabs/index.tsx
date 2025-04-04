@@ -6,6 +6,7 @@ import ContainerPlaceholder from './container-placehoder'
 import TwoColumnsPlaceholder from './two-column-placeholder'
 import VideoPlaceholder from './video-placeholder'
 import LinkPlaceholder from './link-placehoder'
+import NavbarPlaceholder from './navbar-placeholder'
 
 type Props = {}
 
@@ -46,6 +47,12 @@ const ComponentsTab = (props: Props) => {
             id: 'link',
             group: 'elements',
           },
+          {
+            Component : <NavbarPlaceholder/>,
+            label : 'Navbar',
+            id : 'navbar',
+            group : 'elements',
+          }
     ]
   return (
     <Accordion

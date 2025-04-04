@@ -7,25 +7,27 @@ import Sidebar from '@/components/global/sidebar'
 import PrivateRoutes from '@/privateRoutes/admin-routes'
 import TenantAdminLoginCheck from '@/providers/tenant-admin-login-provider'
 import React from 'react'
-// import "@/styles/grapes.css"
 
 const TenantsAdminLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname()
 
   const isWebsiteBuilder = pathname.startsWith("/admin/builder/")
+  const isBlogEditor = pathname.startsWith('/admin/blog/')
+
 
   return (
     <TenantAdminLoginCheck>
       <PrivateRoutes allowedRoles={['staff', 'admin']}>
-        <div className='h-screen overflow-hidden'>
+        <div className='h-screen overflow-auto'>
 
-          {!isWebsiteBuilder && <Sidebar />}
+          {!(isWebsiteBuilder || isBlogEditor) && <Sidebar />}
           
-          <div className={isWebsiteBuilder ? "w-full" : "md:pl-[300px]"}>
-            {!isWebsiteBuilder && <InfoBar />}
+          <div className={`${(isWebsiteBuilder || isBlogEditor) ? 'w-full' : "md:pl-[300px]"}`}>
 
-            <div className="relative">
-              {isWebsiteBuilder ? children : <BlurPage>{children}</BlurPage>}
+            {!(isWebsiteBuilder || isBlogEditor) && <InfoBar />}
+
+            <div className="relative  bg-transparent">
+              {(isWebsiteBuilder || isBlogEditor) ? children : <BlurPage>{children}</BlurPage>}
             </div>
           </div>
 

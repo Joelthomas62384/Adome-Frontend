@@ -64,6 +64,7 @@ const TenantCreateModal = ({open , title , subdomain , setSubdomain}: Props) => 
   
 
   const form  = useForm<TenantFormType>({
+    // ts-ignore
     resolver: zodResolver(tenantSchema),
     defaultValues: {
       name: "",

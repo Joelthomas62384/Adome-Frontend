@@ -33,7 +33,7 @@ const TextComponent = (props: Props) => {
   return (
     <div 
     style={styles}
-    draggable={!state.editor.liveMode && !state.editor.previewMode}
+    draggable = {!(state.editor.liveMode || state.editor.previewMode)}
     className={clsx(
         'p-[2px] w-full m-[5px] relative text-[16px] transition-all',
         {

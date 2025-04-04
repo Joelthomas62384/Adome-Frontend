@@ -1,16 +1,20 @@
 "use client"
 
+import axiosInstance from '@/axios/public-instance'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { DeviceTypes, useEditor } from '@/providers/editor/editor-provider'
+import { RootState } from '@/Redux/store'
 import clsx from 'clsx'
 import { ArrowLeftCircle, EyeIcon, Laptop, Redo2, Smartphone, SmartphoneIcon, Tablet, TabletIcon, Undo2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { toast } from 'sonner'
 
 type Props = {
     webId : string
@@ -18,7 +22,11 @@ type Props = {
 
 }
 
+
+
+
 const WebEditorNavigation = ({webId , pageDetails}: Props) => {
+  const {schemaName} = useSelector((state:RootState)=>state.app)
     const router = useRouter()
     const {state , dispatch} = useEditor()
     useEffect(() => {
@@ -30,6 +38,9 @@ const WebEditorNavigation = ({webId , pageDetails}: Props) => {
  
      })
     }, [webId])
+
+
+
     
 
     // const handleOnBlurTitleChange: FocusEventHandler<HTMLInputElement> = async (
@@ -72,7 +83,18 @@ const WebEditorNavigation = ({webId , pageDetails}: Props) => {
       }
 
       
-      const handleOnSave = ()=>{}
+      const handleOnSave = async ()=>{
+        const response = await axiosInstance.put(`builder/${schemaName}/website/${webId}`,{
+          web_data : state.editor.elements
+        })
+        if (response.status==200){
+          toast.success("Saved Successfully" , {
+            description: "Changes saved successfully",
+          })
+        }
+
+        
+      }
     
 
   return (

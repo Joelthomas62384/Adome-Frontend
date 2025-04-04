@@ -1,8 +1,12 @@
 
 "use client"
 import { EditorBtns } from "@/constants"
-import React, { createContext, Dispatch, useContext, useReducer } from "react"
+import React, { createContext, Dispatch, useContext, useEffect, useReducer } from "react"
 import { EditorAction } from "./editor-action"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import axiosInstance from "@/axios/public-instance"
+import { useSelector } from "react-redux"
+import { RootState } from "@/Redux/store"
 
 export type DeviceTypes = 'Desktop' | 'Mobile' | 'Tablet'
 
@@ -12,7 +16,7 @@ export type EditorElement = {
     styles: React.CSSProperties
     name: string
     type: EditorBtns
-    content: EditorElement[] | {href? : string , innerText?: string}
+    content: EditorElement[] | { href?: string, innerText?: string, src?: string }
 }
 
 
@@ -46,7 +50,7 @@ const initialEditorState: EditorState['editor'] = {
             id: '__body',
             name: 'Body',
             styles: {
-                background : 'white',
+                background: 'white',
                 // padding: initialEditorState.liveMode && 0,
                 // margin: 0
             },
@@ -231,144 +235,141 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
             const clickedState = {
                 ...state,
                 editor: {
-                  ...state.editor,
-                  selectedElement: action.payload.elementDetails || {
-                    id: '',
-                    content: [],
-                    name: '',
-                    styles: {},
-                    type: null,
-                  },
+                    ...state.editor,
+                    selectedElement: action.payload.elementDetails || {
+                        id: '',
+                        content: [],
+                        name: '',
+                        styles: {},
+                        type: null,
+                    },
                 },
                 history: {
-                  ...state.history,
-                  history: [
-                    ...state.history.history.slice(0, state.history.currentIndex + 1),
-                    { ...state.editor }, // Save a copy of the current editor state
-                  ],
-                  currentIndex: state.history.currentIndex + 1,
+                    ...state.history,
+                    history: [
+                        ...state.history.history.slice(0, state.history.currentIndex + 1),
+                        { ...state.editor }, // Save a copy of the current editor state
+                    ],
+                    currentIndex: state.history.currentIndex + 1,
                 },
-              }
-              return clickedState
+            }
+            return clickedState
         case "CHANGE_DEVICE":
             const changedDeviceState = {
                 ...state,
                 editor: {
-                  ...state.editor,
-                  device: action.payload.device,
+                    ...state.editor,
+                    device: action.payload.device,
                 },
-              }
-              return changedDeviceState
-        
-              case "TOGGLE_PREVIEW_MODE":
+            }
+            return changedDeviceState
+
+        case "TOGGLE_PREVIEW_MODE":
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    previewMode: !state.editor.previewMode,
+                    elements: state.editor.elements.map((element) =>
+                        element.id === "__body"
+                            ? {
+                                ...element,
+                                styles: {
+                                    ...element.styles,
+                                    padding: !state.editor.previewMode ? 0 : undefined,
+                                },
+                            }
+                            : element
+                    ),
+                },
+            };
+
+
+            case "TOGGLE_LIVE_MODE": {
+                const newLiveMode = action.payload
+                    ? action.payload.value
+                    : !state.editor.liveMode;
+            
                 return {
                     ...state,
                     editor: {
                         ...state.editor,
-                        previewMode: !state.editor.previewMode,
+                        liveMode: newLiveMode,
                         elements: state.editor.elements.map((element) =>
                             element.id === "__body"
                                 ? {
-                                    ...element,
-                                    styles: {
-                                        ...element.styles,
-                                        padding: !state.editor.previewMode ? 0 : undefined,
-                                    },
-                                }
+                                      ...element,
+                                      styles: {
+                                          ...element.styles,
+                                          padding: newLiveMode ? 0 : undefined,
+                                      },
+                                  }
                                 : element
                         ),
                     },
                 };
+            }
             
-            
-              case "TOGGLE_LIVE_MODE":
-                return {
-                    ...state,
-                    editor: {
-                        ...state.editor,
-                        liveMode: action.payload
-                            ? action.payload.value
-                            : !state.editor.liveMode,
-                        elements: state.editor.elements.map(element => 
-                            element.id === "__body" 
-                                ? {
-                                    ...element,
-                                    styles: {
-                                        ...element.styles,
-                                        padding: action.payload 
-                                            ? action.payload.value 
-                                                ? 0 
-                                                : undefined
-                                            : !state.editor.liveMode 
-                                                ? 0 
-                                                : undefined,
-                                    }
-                                }
-                                : element
-                        )
-                    },
-                };
-            
-        
+
         case "REDO":
             if (state.history.currentIndex < state.history.history.length - 1) {
                 const nextIndex = state.history.currentIndex + 1
                 const nextEditorState = { ...state.history.history[nextIndex] }
                 const redoState = {
-                  ...state,
-                  editor: nextEditorState,
-                  history: {
-                    ...state.history,
-                    currentIndex: nextIndex,
-                  },
+                    ...state,
+                    editor: nextEditorState,
+                    history: {
+                        ...state.history,
+                        currentIndex: nextIndex,
+                    },
                 }
                 return redoState
-              }
-              return state
+            }
+            return state
         case "UNDO":
             if (state.history.currentIndex > 0) {
                 const prevIndex = state.history.currentIndex - 1
                 const prevEditorState = { ...state.history.history[prevIndex] }
                 const undoState = {
-                  ...state,
-                  editor: prevEditorState,
-                  history: {
-                    ...state.history,
-                    currentIndex: prevIndex,
-                  },
+                    ...state,
+                    editor: prevEditorState,
+                    history: {
+                        ...state.history,
+                        currentIndex: prevIndex,
+                    },
                 }
                 return undoState
-              }
-              return state
+            }
+            return state
         case "LOAD_DATA":
             return {
                 ...initialState,
                 editor: {
-                  ...initialState.editor,
-                  elements: action.payload.elements || initialEditorState.elements,
-                  liveMode: !!action.payload.withLive,
+                    ...initialState.editor,
+                    elements: action.payload.elements || initialEditorState.elements,
+                    liveMode: !!action.payload.withLive,
                 },
-              }
+            }
         case "SET_FUNNELPAGE_ID":
             const { funnelPageId } = action.payload
             const updatedEditorStateWithFunnelPageId = {
-              ...state.editor,
-              funnelPageId,
+                ...state.editor,
+                funnelPageId,
             }
-      
+
             const updatedHistoryWithFunnelPageId = [
-              ...state.history.history.slice(0, state.history.currentIndex + 1),
-              { ...updatedEditorStateWithFunnelPageId }, // Save a copy of the updated state
+                ...state.history.history.slice(0, state.history.currentIndex + 1),
+                { ...updatedEditorStateWithFunnelPageId },
             ]
-      
+
             const funnelPageIdState = {
-              ...state,
-              editor: updatedEditorStateWithFunnelPageId,
-              history: {
-                ...state.history,
-                history: updatedHistoryWithFunnelPageId,
-                currentIndex: updatedHistoryWithFunnelPageId.length - 1,
-              },
+                ...state,
+                editor: updatedEditorStateWithFunnelPageId,
+                history: {
+                    ...state.history,
+                    history: updatedHistoryWithFunnelPageId,
+                    currentIndex: updatedHistoryWithFunnelPageId.length - 1,
+                },
             }
             return funnelPageIdState
         default:
@@ -379,10 +380,10 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
 
 
 export type EditorContext = {
-    device : DeviceTypes
-    preview : boolean
-    setPreviewMode : (previewMode:boolean) => void
-    setDevice : (device:DeviceTypes) => void
+    device: DeviceTypes
+    preview: boolean
+    setPreviewMode: (previewMode: boolean) => void
+    setDevice: (device: DeviceTypes) => void
 }
 
 
@@ -393,48 +394,48 @@ export const EditorContext = createContext<{
     // subaccountId: string
     webId: string
     pageDetails: any | null
-  }>({
+}>({
     state: initialState,
     dispatch: () => undefined,
     // subaccountId: '',
     webId: '',
     pageDetails: null,
-  })
+})
 
 
-  type EditorProps ={
-    children : React.ReactNode
-    webId : string
-    pageDetails : any | null
+type EditorProps = {
+    children: React.ReactNode
+    webId: string
+    pageDetails: any | null
 
-  }
+}
 
 
 
 const EditorProvider = (props: EditorProps) => {
     const [state, dispatch] = useReducer(editorReducer, initialState)
-  
+
+
     return (
-      <EditorContext.Provider
-        value={{
-          state,
-          dispatch,
-        //   subaccountId: props.subaccountId,
-          webId: props.webId,
-          pageDetails: props.pageDetails,
-        }}
-      >
-        {props.children}
-      </EditorContext.Provider>
+        <EditorContext.Provider
+            value={{
+                state,
+                dispatch,
+                webId: props.webId,
+                pageDetails: props.pageDetails,
+            }}
+        >
+            {props.children}
+        </EditorContext.Provider>
     )
-  }
-  
-  export const useEditor = () => {
+}
+
+export const useEditor = () => {
     const context = useContext(EditorContext)
     if (!context) {
-      throw new Error('useEditor Hook must be used within the editor Provider')
+        throw new Error('useEditor Hook must be used within the editor Provider')
     }
     return context
-  }
-  
-  export default EditorProvider
+}
+
+export default EditorProvider

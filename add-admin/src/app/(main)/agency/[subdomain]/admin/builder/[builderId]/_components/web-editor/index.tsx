@@ -7,6 +7,11 @@ import clsx from 'clsx'
 import { EyeOff } from 'lucide-react'
 import React, { useEffect } from 'react'
 import Recursive from './web-editor-components/recursive'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/Redux/store'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import axiosInstance from '@/axios/public-instance'
+import { Spinner } from '@/app/components/ui/spinner'
 
 type Props = {
     webPageId: string
@@ -17,37 +22,75 @@ type Props = {
 const WebEditor = ({webPageId,liveMode}: Props) => {
     const {state , dispatch} = useEditor()
 
-    useEffect(() => {
-     if(!liveMode){
-        dispatch({
-            type: "TOGGLE_LIVE_MODE",
-            payload: {
-              value: true,
-            },
-        })
-
-     }
-    }, [liveMode])
-
     // need to get the webpage data and start the event load data
+    const {schemaName} = useSelector((state:RootState)=>state.app)
+    const queryClient = useQueryClient()
+    const fetchWebsiteData = async (webId:string)=>{
+        const response = await axiosInstance.get(`builder/${schemaName}/builder-element/${webId}`)
+        queryClient.invalidateQueries({
+            queryKey: ["website", webId],
+        })
+        return response.data
 
-    useEffect(() => {
-        const fetchData = async () => {
-          const response = {content : null}
-          if (!response) return
+    }
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["website", webPageId],
+        queryFn: () => fetchWebsiteData(webPageId),
+        enabled: !!webPageId, 
+    })
+
+    // useEffect(() => {
+    //     queryClient.invalidateQueries({ queryKey: ["website", props.webId] });
+    // }, [props.webId]);
+
+    // useEffect(() => {
+    //     console.log("Loading working")
+    //     console.log(schemaName, "schema Name")
+    //     if (data) {
+    //         console.log(data)
+    //         dispatch({
+    //             type: "LOAD_DATA",
+    //             payload: {
+    //                 elements: data.web_data || initialEditorState.elements,
+    //                 withLive: data.liveMode || false,
+    //             },
+    //         })
+    //     }
+    // }, [data])
     
-          dispatch({
+    useEffect(() => {
+      const fetchData = async () => {
+          // const response = {content : null}
+          // if (!response) return
+    
+        data &&  dispatch({
             type: 'LOAD_DATA',
             payload: {
-              elements: response.content ? JSON.parse(response?.content) : '',
+              elements: data.web_data ? data.web_data : '',
               withLive: !!liveMode,
             },
           })
         }
-        fetchData()
-      }, [webPageId])
 
-    const handleClick = () => {
+        fetchData()
+      }, [data])
+      
+      useEffect(() => {
+       if(!!liveMode){
+        console.log("working")
+          dispatch({
+              type: "TOGGLE_LIVE_MODE",
+              payload: {
+                value: true,
+              },
+          })
+  
+       }
+       console.log(state.editor.liveMode)
+
+      }, [liveMode])
+      
+      const handleClick = () => {
         dispatch({
           type: 'CHANGE_CLICKED_ELEMENT',
           payload: {},
@@ -59,6 +102,15 @@ const WebEditor = ({webPageId,liveMode}: Props) => {
         dispatch({ type: 'TOGGLE_LIVE_MODE' })
       }
 
+
+      if(isLoading){
+        return (
+          <div className='w-full h-screen'>
+
+            <Spinner />
+          </div>
+        )
+      }
      
   return (
     <div

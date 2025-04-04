@@ -87,6 +87,7 @@ export type EditorBtns =
   | 'image'
   | null
   | '3Col'
+  | 'navbar'
 
 
   export const defaultStyles: React.CSSProperties = {
@@ -96,3 +97,41 @@ export type EditorBtns =
     textAlign: 'left',
     opacity: '100%',
   }
+  export const blogs = [
+    {
+      id: 1,
+      title: "The Future of AI in Web Development",
+      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      description: "Exploring how AI is shaping the future of web applications.",
+      author: "John Doe",
+    },
+    {
+      id: 2,
+      title: "Mastering React with TypeScript",
+      image: "https://images.unsplash.com/photo-1522252234503-e356532cafd5",
+      description: "A guide to building scalable applications with React and TypeScript.",
+      author: "Jane Smith",
+    },
+    {
+      id: 3,
+      title: "Why Tailwind CSS is a Game Changer",
+      image: "https://images.unsplash.com/photo-1557804506-669a67965ba0",
+      description: "How Tailwind CSS improves the speed and efficiency of styling in modern projects.",
+      author: "Emily Johnson",
+    },
+    {
+      id: 4,
+      title: "Understanding Serverless Architecture",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+      description: "An in-depth look at serverless computing and its benefits.",
+      author: "Michael Brown",
+    },
+    {
+      id: 5,
+      title: "Building Scalable SaaS with Next.js",
+      image: "https://images.unsplash.com/photo-1532074205216-d0e1f4b87368",
+      description: "How Next.js helps in building high-performance SaaS platforms.",
+      author: "Sarah Wilson",
+    },
+  ];
+  

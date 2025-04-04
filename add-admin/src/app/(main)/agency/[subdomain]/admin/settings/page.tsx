@@ -18,6 +18,7 @@ import axiosInstance from '@/axios/public-instance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { setAppInfo } from '@/Redux/slices/app-details';
+import { toast } from 'sonner';
 
 const tenantSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -35,7 +36,7 @@ const tenantSchema = z.object({
 const Page = () => {
   const { tenant , schemaName} = useSelector((state: RootState) => state.app);
   const queryClient = useQueryClient()
-  const {toast} = useToast()
+  // const {toast} = useToast()
   const dispatch = useDispatch()
   const subdomain = tenant.subdomain
 
@@ -90,10 +91,8 @@ const Page = () => {
         ...(previousData || {}),
         ...newData
       }))
-        toast({
-          title : "Success",
+        toast("Success" , {
           description : "Tenant updated successfully",
-          variant : "default"
         })
       return {previousData}
 
@@ -109,10 +108,10 @@ const Page = () => {
     },
     onError: (_err, _newData, context:any) => {
       if (context?.previousData) {
-        queryClient.setQueryData(['tenant', schemaName], context.previousData); // Rollback state
+        queryClient.setQueryData(['tenant', schemaName], context.previousData); 
         // dispatch
       }
-      toast({ title: 'Update failed!',description : "Tenant updation failed", variant: 'destructive' });
+      toast.error('Update failed!' , { description : "Tenant updation failed" });
     },
   });
 

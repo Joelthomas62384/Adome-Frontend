@@ -8,7 +8,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { LucideBell } from 'lucide-react'
+import { LucideBell, Plus } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,9 @@ import { getSubdomain, getTwoLetters } from '@/constants'
 import { removeCookie } from 'typescript-cookie'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
+import { usePathname } from 'next/navigation'
+import BlogDialog from './_components/blog-dialog'
+import WebDialog from './_components/webbuilder-dialog'
 
 type Props = {
   className?: string
@@ -30,6 +33,7 @@ type Props = {
 const InfoBar = ({ className }: Props) => {
   const user = useSelector((state: RootState) => state.user.user)  // Fix double `.user`
   const [fallBackName, setFallBackName] = useState<string>('U')
+  const pathName = usePathname()
 
   // Logout function
   const logoutMutation = useMutation({
@@ -61,6 +65,9 @@ const InfoBar = ({ className }: Props) => {
     >
       <div className="flex items-center gap-2 ml-auto">
         {/* Profile Dropdown */}
+      { pathName.endsWith('/admin/blog') && <BlogDialog/>}
+      { pathName.endsWith('/admin/builder') && <WebDialog/>}
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar className="cursor-pointer">
@@ -75,19 +82,7 @@ const InfoBar = ({ className }: Props) => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Notification Bell */}
-        <Sheet>
-          <SheetTrigger>
-            <div className="rounded-full w-9 h-9 flex items-center justify-center">
-              <LucideBell size={26} />
-            </div>
-          </SheetTrigger>
-          <SheetContent className="pr-4 overflow-scroll bg-themeBlack">
-            <SheetHeader className="text-left">
-              <SheetTitle>Notifications</SheetTitle>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
+      
       </div>
     </div>
   )

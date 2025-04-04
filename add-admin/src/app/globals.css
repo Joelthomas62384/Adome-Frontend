@@ -280,3 +280,19 @@ html {
   border-top-color: #B4B0AE !important;
   border-left-color: #B4B0AE !important;
 }
+
+
+* {
+  outline: none !important;
+}
+/* 
+.novel-editor:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  ring: 0 !important;
+} */
+
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

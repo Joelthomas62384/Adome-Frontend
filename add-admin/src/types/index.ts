@@ -96,10 +96,11 @@ export interface ColorState {
     direction: string;
     color1: string;
     color2: string;
-    image: string;
+    image?: string;
     opacity1: number;
     opacity2: number;
     selectedColor: number;
+    ImageSize? : string
   }
   
   // Define the possible action types
@@ -114,4 +115,5 @@ export interface ColorState {
     | { type: "SET_OPACITY1"; payload: number }
     | { type: "SET_OPACITY2"; payload: number }
     | {type : "SET_SELECTED_COLOR"; payload: number }
+    | { type: "SET_IMAGE_SIZE"; payload: string } 
     | { type: "RESET" }; // To reset the state
