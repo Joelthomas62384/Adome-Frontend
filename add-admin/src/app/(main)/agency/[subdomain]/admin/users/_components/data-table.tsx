@@ -26,6 +26,7 @@ interface DataTableProps<TData, TValue> {
   filterValue: string
   actionButtonText?: React.ReactNode,
   isLoading? : boolean
+  
 }
 
 export default function DataTable<TData, TValue>({

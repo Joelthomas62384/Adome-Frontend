@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 type Props = {}
 
 const page = (props: Props) => {
+ 
   return (
     <div>page</div>
   )

@@ -33,6 +33,8 @@ const tenantSchema = z.object({
   logo: z.string().optional(),
 });
 
+
+
 const Page = () => {
   const { tenant , schemaName} = useSelector((state: RootState) => state.app);
   const queryClient = useQueryClient()

@@ -63,6 +63,15 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 429) {
+      error.message = "Too many attempts. Please try again later.";
+    }
+    return Promise.reject(error);
+  }
+);
 
 
 export default axiosInstance;

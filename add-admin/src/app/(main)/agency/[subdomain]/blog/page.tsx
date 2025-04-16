@@ -10,12 +10,15 @@ import axiosInstance from "@/axios/public-instance";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const PAGE_LIMIT = 6; // Adjust as needed
 
 
 const Page = () => {
 
+
+  const router = useRouter()
     const {schemaName} = useSelector((state:RootState)=>state.app)
 
     const fetchBlogs = async ({ pageParam = 1 }) => {
@@ -65,7 +68,6 @@ const Page = () => {
         Blogs <br className="md:hidden" /> Today
       </GradientText>
 
-      {/* Search Input */}
       <Input
         type="text"
         placeholder="Search blogs..."
@@ -84,7 +86,7 @@ const Page = () => {
             return (
               <div key={blog.id} ref={isLastBlog ? lastBlogRef : null}>
                 <div onClick={()=>{
-                    window.location.href = `/blog/${blog.id}`;
+                   router.push( `/blog/${blog.id}`);
                 }}>
                 <BlogCards
                   id={blog.id}
@@ -93,7 +95,8 @@ const Page = () => {
                   content={blog.content}
                   author={blog.author}
                   is_admin={false}
-                  sm={true}
+                  sm={false}
+                  created_at={blog.created_at}
                   />
                   </div>
               </div>
@@ -102,7 +105,6 @@ const Page = () => {
         )}
       </div>
 
-      {/* Loading More Indicator */}
       {isFetchingNextPage && <p className="text-gray-500 mt-4">Loading more...</p>}
     </div>
   );

@@ -12,6 +12,10 @@ type Props = {
 
 const TextComponent = (props: Props) => {
     const {dispatch , state } = useEditor()
+    const handleDragStart = (e: React.DragEvent, type: string) => {
+        if (type === '__body') return
+        e.dataTransfer.setData('componentType', type)
+      }
 
     const handleDeleteElement = () => {
         dispatch({
@@ -45,6 +49,7 @@ const TextComponent = (props: Props) => {
         }
       )}
       onClick={handleOnClickBody}
+      onDragStart={(e)=>handleDragStart(e , 'text')}
       >
           {state.editor.selectedElement.id === props.element.id &&
         !state.editor.liveMode && (

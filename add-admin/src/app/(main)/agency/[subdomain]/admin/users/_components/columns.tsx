@@ -12,15 +12,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Ban,  Key,  MoreVertical, StopCircle } from "lucide-react";
-import {  useState } from "react";
+import { Ban, Key, MoreVertical, StopCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-  } from "@/components/ui/tooltip"
-  
+} from "@/components/ui/tooltip"
+
 import TextCopyButton from "./text-copy";
 import Assure from "@/components/global/Assure";
 import axiosInstance from "@/axios/public-instance";
@@ -28,6 +28,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
 import PermissionEditor from "./permission-editor";
+import { useAzure } from "@/providers/assure-provider";
+import { toast } from "sonner";
 
 
 
@@ -66,39 +68,39 @@ export const columns: ColumnDef<UsersType>[] = [
             const designation = row.original.designation
             return (
                 <TooltipProvider>
-                {designation.length > 0 && designation.split(' ').length > 1 ? (
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <Badge
-                                className={clsx({
-                                    'bg-green-300 ': role === 'admin',
-                                    'bg-orange-300': role === 'staff',
-                                    'bg-white': role === 'user',
-                                    'cursor-pointer': true
-                                })}
-                            >
-                                {role === 'staff' && designation.length > 0 
-                                    ? getLetters(designation) 
-                                    : role.charAt(0).toUpperCase() + role.slice(1)}
-                            </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-themeDarkGray text-themeTextWhite">{designation}</TooltipContent>
-                    </Tooltip>
-                ) : (
-                    <Badge
-                        className={clsx({
-                            'bg-green-300 ': role === 'admin',
-                            'bg-orange-300': role === 'staff',
-                            'bg-white': role === 'user',
-                            'cursor-pointer': true
-                        })}
-                    >
-                        {(designation.length > 0 && designation.split(' ').length === 1) ? designation : (role.charAt(0).toUpperCase() + role.slice(1))}
-                    </Badge>
-                )}
-            </TooltipProvider>
-            
-            
+                    {designation.length > 0 && designation.split(' ').length > 1 ? (
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Badge
+                                    className={clsx({
+                                        'bg-green-300 ': role === 'admin',
+                                        'bg-orange-300': role === 'staff',
+                                        'bg-white': role === 'user',
+                                        'cursor-pointer': true
+                                    })}
+                                >
+                                    {role === 'staff' && designation.length > 0
+                                        ? getLetters(designation)
+                                        : role.charAt(0).toUpperCase() + role.slice(1)}
+                                </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-themeDarkGray text-themeTextWhite">{designation}</TooltipContent>
+                        </Tooltip>
+                    ) : (
+                        <Badge
+                            className={clsx({
+                                'bg-green-300 ': role === 'admin',
+                                'bg-orange-300': role === 'staff',
+                                'bg-white': role === 'user',
+                                'cursor-pointer': true
+                            })}
+                        >
+                            {(designation.length > 0 && designation.split(' ').length === 1) ? designation : (role.charAt(0).toUpperCase() + role.slice(1))}
+                        </Badge>
+                    )}
+                </TooltipProvider>
+
+
             )
         },
     },
@@ -119,18 +121,60 @@ interface Props {
 const CallToAction: React.FC<Props> = ({ rowData }) => {
     const [open, setOpen] = useState<boolean>(false);
     const [banBlock, setBanBlock] = useState("");
+    const {
+        setDescription,
+        setTitle,
+        handleOpen,
+        setOnConfirm,
+    } = useAzure();
+
+
     const queryClient = useQueryClient();
-    const { toast } = useToast();
     const [staffData, setStaffData] = useState<staffPermission>({
         is_staff: rowData.is_staff,
-        hasBlogPermission : rowData.hasBlogPermission,
-        hasCommunityPermission : rowData.hasCommunityPermission,
-        hasNewsletterPermission : rowData.hasNewsletterPermission,
-        hasCoursesPermission : rowData.hasCoursesPermission,
+        hasBlogPermission: rowData.hasBlogPermission,
+        hasCommunityPermission: rowData.hasCommunityPermission,
+        hasNewsletterPermission: rowData.hasNewsletterPermission,
+        hasCoursesPermission: rowData.hasCoursesPermission,
         designation: rowData.designation,
-        hasStaffPermission : rowData.hasStaffPermission,
+        hasStaffPermission: rowData.hasStaffPermission,
+        hasBuilderPermission : rowData.hasBuilderPermission
 
     })
+    const [actionType, setActionType] = useState<"ban" | "block" | null>(null);
+
+    useEffect(() => {
+        if (!actionType) return;
+
+        const isBan = actionType === "ban";
+        const isBlocked = rowData.blocked;
+        const isBanned = rowData.banned;
+
+        setTitle(isBan ? (isBanned ? "Unban this user?" : "Ban this user?") : (isBlocked ? "Unblock this user?" : "Block this user?"));
+
+        setDescription(
+            isBan
+                ? isBanned
+                    ? "This action will unban the user. They will regain limited access."
+                    : "This action will ban the user. They will only access paid content."
+                : isBlocked
+                    ? "This will unblock the user and allow full access."
+                    : "This will block the user entirely from the platform."
+        );
+
+        setOnConfirm(() => {
+            if (isBan) {
+                banMutation.mutate();
+            } else {
+                blockMutation.mutate();
+            }
+            setActionType(null);
+        });
+
+        handleOpen();
+    }, [actionType]);
+
+
 
     const banUser = async () => {
         const { data } = await axiosInstance.post(`user/${getSubdomain()}/ban/${rowData.user.username}`);
@@ -147,8 +191,8 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
         mutationFn: banUser,
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ["users"] });
-            toast({
-                title: `User ${rowData.user.username} ${!rowData.banned ? "Unbanned" : "Banned"}`,
+            toast.success( `User ${rowData.user.username} ${rowData.banned ? "Unbanned" : "Banned"}` ,{
+                
                 description: !rowData.banned ? "User banned successfully" : "User unbanned successfully",
             });
             const previousUsers = queryClient.getQueryData(["users"]);
@@ -181,8 +225,9 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
         mutationFn: blockUser,
         onMutate: async () => {
             await queryClient.cancelQueries({ queryKey: ["users"] });
-            toast({
-                title: `User ${rowData.user.username} ${!rowData.blocked ? "Unblocked" : "Blocked"}`,
+        
+            toast.success( `User ${rowData.user.username} ${rowData.blocked ? "Unblocked" : "Blocked"}` ,{
+                
                 description: !rowData.blocked ? "User blocked successfully" : "User unblocked successfully",
             });
             const previousUsers = queryClient.getQueryData(["users"]);
@@ -218,17 +263,16 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
         mutationFn: makeStaff,
         onMutate: async (newStatus) => {
             await queryClient.cancelQueries({ queryKey: ["users"] });
-    
-            toast({
-                title: `User ${rowData.user.username} Updated`,
+
+            toast.success(`User ${rowData.user.username} Updated`, {
                 description: "User Data updated successfully",
             });
-    
+
             const previousUsers = queryClient.getQueryData(["users"]);
-    
+
             queryClient.setQueryData(["users"], (oldData: any) => {
                 if (!oldData) return oldData;
-    
+
                 return {
                     ...oldData,
                     pages: oldData.pages.map((page: any) => ({
@@ -236,16 +280,16 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
                         users: page.users.map((user: any) =>
                             user.username === rowData.user.username
                                 ? {
-                                    ...user,  
+                                    ...user,
                                     is_staff: newStatus,
                                     role: newStatus ? "staff" : "user"
                                 }
-                                : { ...user } 
+                                : { ...user }
                         ),
                     })),
                 };
             });
-    
+
             return { previousUsers };
         },
         onError: (err, newData, context) => {
@@ -258,7 +302,7 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
             queryClient.invalidateQueries({ queryKey: ["users"] });
         }
     });
-    
+
 
     return (
         <>
@@ -272,23 +316,20 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
                     <DropdownMenuItem onClick={() => setOpen(true)}>
                         <Key color="#2563EB" /> Permissions
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => {
-                        setBanBlock("ban");
-                    }}>
+                    <DropdownMenuItem onClick={() => setActionType("ban")}>
                         <Ban color="orange" /> {rowData.banned ? "Unban" : "Ban"}
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem onClick={() => {
-                        setBanBlock("block");
-                    }}>
+                    <DropdownMenuItem onClick={() => setActionType("block")}>
                         <StopCircle color="red" /> {rowData.blocked ? "Unblock" : "Block"}
                     </DropdownMenuItem>
+
 
                 </DropdownMenuContent>
             </DropdownMenu>
 
-          <PermissionEditor rowData={rowData} setOpen={setOpen} open={open} setStaffData={setStaffData} staffData={staffData}  updateUserMutation={updateUserMutation} />
-            <Assure open={!!banBlock} handleOpen={() => setBanBlock("")} description={banBlock === "block" ? "This action will block the user. User will be completely prohibited from the page." : "This action will ban the user, they will only be able to access things for which they have paid."} onConfirm={() => { banBlock === "block" ? blockMutation.mutate() : banMutation.mutate(); }} />
+            <PermissionEditor rowData={rowData} setOpen={setOpen} open={open} setStaffData={setStaffData} staffData={staffData} updateUserMutation={updateUserMutation} />
+            {/* <Assure open={!!banBlock} handleOpen={() => setBanBlock("")} description={banBlock === "block" ? "This action will block the user. User will be completely prohibited from the page." : "This action will ban the user, they will only be able to access things for which they have paid."} onConfirm={() => { banBlock === "block" ? blockMutation.mutate() : banMutation.mutate(); }} /> */}
         </>
     );
 };

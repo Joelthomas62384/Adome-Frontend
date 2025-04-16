@@ -4,7 +4,7 @@ import { Spinner } from '@/app/components/ui/spinner'
 import axiosInstance from '@/axios/public-instance'
 import { useToast } from '@/hooks/use-toast'
 import { RootState } from '@/Redux/store'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -46,7 +46,7 @@ const Page = (props: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const {schemaName} = useSelector((state:RootState)=>state.app)
- 
+ const queryClient = useQueryClient()
   
 //   const {schemaName} = useSelector((state: RootState) => state.app)
 // const schemaName = getSubdomain()
@@ -83,6 +83,9 @@ const Page = (props: Props) => {
           variant : "default"
         })
         router.push("/")
+        queryClient.invalidateQueries({
+          queryKey : ['tenantUser']
+        })
 
       }
 

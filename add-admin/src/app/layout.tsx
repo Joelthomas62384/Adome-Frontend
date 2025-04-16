@@ -10,6 +10,9 @@ import LoginCheck from "@/providers/login-check";
 import withProgress from "@/providers/progressbar-provider";
 import ProgressBarProvider from "@/providers/progressbar-provider";
 import { Toaster as Sonner } from "@/components/ui/sonner"
+import { ThemeProvider } from "@/theme";
+import Assure from "@/components/global/Assure";
+import { AzureProvider } from "@/providers/assure-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,24 +39,36 @@ export default function RootLayout({
 
 
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
+              <AzureProvider>
+
+        
         <ReduxProvider>
           
           <ReactQueryProvider>
     <LoginCheck>
 
     <ProgressBarProvider>
+    <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
 
         {children}
+          </ThemeProvider>
     </ProgressBarProvider>
     </LoginCheck>
           </ReactQueryProvider>
         </ReduxProvider>
         <Sonner  />
         <Toaster />
+        <Assure />
+            </AzureProvider>
 
       </body>
     </html>

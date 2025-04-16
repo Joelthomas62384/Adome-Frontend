@@ -50,7 +50,7 @@ const initialEditorState: EditorState['editor'] = {
             id: '__body',
             name: 'Body',
             styles: {
-                background: 'white',
+               
                 // padding: initialEditorState.liveMode && 0,
                 // margin: 0
             },

@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import {
   AlertDialog,
@@ -8,36 +9,22 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useAzure } from "@/providers/assure-provider";
 
-type AssureProps = {
-  title?: string;
-  description?: string;
-  trigger?: React.ReactNode; 
-  onConfirm?: () => void; 
-  open? : boolean
-  handleOpen?: () => void;
-};
+const Assure = () => {
+  const { open, handleOpen, title, description, onConfirm } = useAzure();
 
-const Assure: React.FC<AssureProps> = ({ title, description, trigger, onConfirm , open , handleOpen }) => {
   return (
-    <AlertDialog open={open} onOpenChange={handleOpen}> 
-   {
-    !open && (
-      <AlertDialogTrigger >{trigger}</AlertDialogTrigger>
-    )
-   }
+    <AlertDialog open={open} onOpenChange={handleOpen}>
       <AlertDialogContent className="bg-themeBlack">
         <AlertDialogHeader>
-          <AlertDialogTitle>{title || "Are you absolutely sure?"}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {description || "This action cannot be undone. Please confirm before proceeding."}
-          </AlertDialogDescription>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="bg-themeBlack hover:bg-themeGray">Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={()=>{handleOpen(); onConfirm()}}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -11,8 +11,9 @@ const uploadFile = async (file:any)=>{
   formData.append('file' , file)
   formData.append('content_type' , 'blog')
   const {data} = await axiosInstance.post(`mediamanager/${getSubdomain()}/upload`, formData)
+  console.log(data)
   
-  return data.image
+  return data.file
 
 
 }

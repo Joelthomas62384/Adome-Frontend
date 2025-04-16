@@ -9,10 +9,11 @@ import UploadDropzone from '../upload-dropzone'
 type Props = {
   apiEndpoint: string
   onChange: (url?: string) => void
-  value?: string
+  value?: string,
+  contentType? : string
 }
 
-const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
+const FileUpload = ({ apiEndpoint, onChange, value ,contentType}: Props) => {
   const type = value?.split('.').pop()
 
   if (value) {
@@ -52,7 +53,7 @@ const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
     )
   }
   return (
-    <div className="w-full bg-[#333337]   ">
+    <div className="w-full bg-themeBlack   ">
       <UploadDropzone
        apiEndpoint={apiEndpoint}
        onUploadComplete = {(url:string)=>{
@@ -62,6 +63,7 @@ const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
          onUploadError = {(error:string)=>{
           console.log(error)
          }}
+         contentType={contentType}
         
       />
     </div>

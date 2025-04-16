@@ -24,7 +24,7 @@ type BlogPost = {
 
 const PAGE_LIMIT = 10 
 
-const BlogPage = () => {
+const page = () => {
   const { schemaName } = useSelector((state: RootState) => state.app)
 
   const queryClient =  useQueryClient()
@@ -133,4 +133,4 @@ const BlogPage = () => {
   )
 }
 
-export default BlogPage
+export default page

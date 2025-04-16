@@ -99,7 +99,8 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
     image,
     ImageSize,
   } = parseBackground(background);
-  // console.log(gradient)
+  console.log(gradient)
+
 
   const initialState: ColorState = {
     color: "",
@@ -114,10 +115,11 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
     selectedColor: 1,
     ImageSize : ImageSize
   }
+
+
   const reducer = (state: ColorState, action: ColorAction): ColorState => {
     switch (action.type) {
       case "SET_COLOR":
-        // console.log("action " + action.payload)
         return { ...state, color: action.payload };
       case "SET_GRADIENT":
         return { ...state, gradient: action.payload, color1: action.payload ? state.color || "#ffffff" : state.color1, };
@@ -149,7 +151,17 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
     }
   };
   const [colorState, colorDispatch] = useReducer(reducer, initialState);
-
+  // console.log(colorState)
+  // useEffect(() => {
+  //   colorDispatch({ type: "SET_GRADIENT", payload: gradient });
+  //   colorDispatch({ type: "SET_DIRECTION", payload: direction });
+  //   colorDispatch({ type: "SET_COLOR1", payload: color1 });
+  //   colorDispatch({ type: "SET_COLOR2", payload: color2 });
+  //   colorDispatch({ type: "SET_OPACITY1", payload: opacity1 });
+  //   colorDispatch({ type: "SET_OPACITY2", payload: opacity2 });
+  //   colorDispatch({ type: "SET_IMAGE", payload: image });
+  //   colorDispatch({ type: "SET_IMAGE_SIZE", payload: ImageSize });
+  // }, [state.editor.selectedElement.styles.background , ]);
 
 
   const handleColorChange = (newColor: string) => {

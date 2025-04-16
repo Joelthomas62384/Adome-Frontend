@@ -13,6 +13,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { formatTimeAgo } from "@/utils";
 // import Link from "next/link";
 
 type Props = {
@@ -24,9 +25,10 @@ type Props = {
   id  : number,
   is_admin? : boolean 
   sm? : boolean
+  created_at : string
 };
 
-const BlogCards = ({ id, title, image, content, author, onDelete , is_admin = true , sm }: Props) => {
+const BlogCards = ({ id, title, image, content, author, onDelete , is_admin = true , sm , created_at }: Props) => {
   const router = useRouter()
  
   return (
@@ -64,12 +66,12 @@ is_admin &&
       <CardFooter className="flex justify-between px-4 pb-4 mt-4 text-sm text-gray-400">
        <div className="flex flex-col">
        <span>{author}</span>
-       <span>March 2025</span> 
+       <span>{formatTimeAgo(created_at)}</span> 
        </div>
        {
 is_admin &&
          <button
-         onClick={() => (window.location.href = `/admin/blog/${id}`)}
+         onClick={() => (router.push(`/admin/blog/${id}`))}
          className="text-blue-500 hover:underline"
   >
     Edit

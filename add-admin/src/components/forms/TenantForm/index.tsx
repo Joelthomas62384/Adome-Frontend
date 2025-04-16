@@ -19,26 +19,27 @@ import { Badge } from '@/components/ui/badge'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
 import { Textarea } from '@/components/ui/textarea'
-import { Switch } from "@/components/ui/switch" // Import Switch Component
+import { Switch } from "@/components/ui/switch"
+
 
 type Props = {
   form: UseFormReturn<TenantFormType>,
   onSubmit: SubmitHandler<TenantFormType>,
-  switches : boolean,
-  actionText? : string
+  switches: boolean,
+  actionText?: string
 }
 
-const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props) => {
+const TenantForm = ({ form, onSubmit, switches, actionText = "Register" }: Props) => {
   const { schemaName, tenant } = useSelector((state: RootState) => state.app)
 
   return (
     <div className="flex flex-col items-center w-full">
       <div className="w-full flex justify-center">
-      <FileUpload
-  apiEndpoint={`mediamanager/${schemaName}/upload`}
-  value={form.watch("logo") || ""} 
-  onChange={(url?: string) => form.setValue("logo", url || '')}
-/>
+        <FileUpload
+          apiEndpoint={`mediamanager/${schemaName}/upload`}
+          value={form.watch("logo") || ""}
+          onChange={(url?: string) => form.setValue("logo", url || '')}
+        />
 
       </div>
 
@@ -74,7 +75,7 @@ const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="contact_email"
@@ -118,64 +119,64 @@ const TenantForm = ({ form, onSubmit,switches , actionText = "Register" }: Props
             )}
           />
 
-        {switches && 
-          (
-            <div className="col-span-2 grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="blog"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
-                  <FormLabel className="text-white">Blog</FormLabel>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
+          {switches &&
+            (
+              <div className="col-span-2 grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="blog"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
+                      <FormLabel className="text-white">Blog</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
 
-            <FormField
-              control={form.control}
-              name="newsletter"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
-                  <FormLabel className="text-white">Newsletter</FormLabel>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled={tenant.subscription_plan === '1'} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-              <FormField
-                control={form.control}
-                name="community"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
-                    <FormLabel className="text-white">Community</FormLabel>
-                    <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange}  disabled={tenant.subscription_plan === '1'}/>
-                    </FormControl> 
-                  </FormItem>
-                )}
-              />
 
-            <FormField
-              control={form.control}
-              name="courses"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
-                  <FormLabel className="text-white">Courses</FormLabel>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled={tenant.subscription_plan === '1'} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-          )
-        }
+                <FormField
+                  control={form.control}
+                  name="newsletter"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
+                      <FormLabel className="text-white">Newsletter</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} disabled={tenant.subscription_plan === '1'} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="community"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
+                      <FormLabel className="text-white">Community</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} disabled={tenant.subscription_plan === '1'} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="courses"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between p-3 border rounded-lg bg-themeBlack">
+                      <FormLabel className="text-white">Courses</FormLabel>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} disabled={tenant.subscription_plan === '1'} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )
+          }
 
           <div className="col-span-2 flex justify-center">
             <Button className='bg-[#333337] rounded-2xl text-white hover:text-[#333337]' type="submit">{actionText}</Button>

@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from '@/components/ui/button'
@@ -25,6 +26,10 @@ import { RootState } from '@/Redux/store'
 import { usePathname } from 'next/navigation'
 import BlogDialog from './_components/blog-dialog'
 import WebDialog from './_components/webbuilder-dialog'
+import CourseDialog from './_components/course-dialog'
+import { ModeToggle } from '@/components/theme-toggle'
+import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
+import Link from 'next/link'
 
 type Props = {
   className?: string
@@ -49,10 +54,9 @@ const InfoBar = ({ className }: Props) => {
     onError: () => console.error('Logout failed'),
   })
 
-  // Update fallback name based on user data
   useEffect(() => {
     if (user?.user.full_name) {
-      setFallBackName(getTwoLetters(user?.user.full_name) || 'U')  // Ensure a valid string
+      setFallBackName(getTwoLetters(user?.user.full_name) || 'U')  
     }
   }, [user])
 
@@ -64,9 +68,9 @@ const InfoBar = ({ className }: Props) => {
       )}
     >
       <div className="flex items-center gap-2 ml-auto">
-        {/* Profile Dropdown */}
       { pathName.endsWith('/admin/blog') && <BlogDialog/>}
       { pathName.endsWith('/admin/builder') && <WebDialog/>}
+      { pathName.endsWith('/admin/courses') && <Link href={'/admin/courses/create'}><Button>Create course</Button></Link>}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -75,7 +79,12 @@ const InfoBar = ({ className }: Props) => {
               <AvatarFallback>{fallBackName}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className='bg-themeBlack'>
+            <DropdownMenuLabel>
+            {user.is_admin? "Admin : " : user.designation}
+              {user.user.full_name}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator  className="my-1 h-px bg-gray-600" />
             <DropdownMenuItem onClick={() => logoutMutation.mutate()} className="cursor-pointer bg-themeBlack hover:bg-themeTextGray">
               Logout
             </DropdownMenuItem>

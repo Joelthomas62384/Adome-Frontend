@@ -57,6 +57,7 @@ const PermissionEditor = ({ rowData, setOpen, staffData, open, setStaffData, upd
                                         hasCommunityPermission: false,
                                         hasNewsletterPermission: false,
                                         hasCoursesPermission: false,
+                                        hasBuilderPermission: false,
                                         designation: ''
                                     })
                                 }));
@@ -74,6 +75,7 @@ const PermissionEditor = ({ rowData, setOpen, staffData, open, setStaffData, upd
                                     ["hasCommunityPermission", "Community Controller"],
                                     ["hasNewsletterPermission", "Newsletter Controller"],
                                     ["hasCoursesPermission", "Courses Controller"],
+                                    ["hasBuilderPermission", "Builder Controller"],
                                 ] as const
                             ).map(([key, label]) => (
                                 <div key={key} className="flex items-center justify-between">

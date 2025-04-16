@@ -18,7 +18,7 @@ export type SidebarType = {
      name: string;
      link: string; 
      icon: JSX.Element
-     permission? : "hasStaffPermission" | "hasSettingPermission" | "hasBuilderPermission" | "hasBlogPermission" | "hasCommunityPermission" | "hasNewsletterPermission" | "hasCoursesPermission"
+     permission? : "hasStaffPermission" | "hasSettingPermission" | "hasBuilderPermission" | "hasBlogPermission" | "hasCommunityPermission" | "hasNewsletterPermission" | "hasCoursesPermission" 
  }
 //  hasStaffPermission: false,
 //  hasBlogPermission: false,
@@ -81,6 +81,7 @@ export type staffPermission = {
     hasCommunityPermission: boolean
     hasNewsletterPermission: boolean
     hasCoursesPermission: boolean
+    hasBuilderPermission : boolean
     designation: string
     is_staff: boolean
 }
@@ -117,3 +118,17 @@ export interface ColorState {
     | {type : "SET_SELECTED_COLOR"; payload: number }
     | { type: "SET_IMAGE_SIZE"; payload: string } 
     | { type: "RESET" }; // To reset the state
+
+
+
+export type useAzureType = {
+        open: boolean;
+        title: string;
+        description: string;
+        setDescription: (desc: string) => void;
+        setTitle: (title: string) => void;
+        handleOpen: () => void;
+        setOnConfirm: (fn: () => void) => void;
+        onConfirm: () => void;
+};
+      

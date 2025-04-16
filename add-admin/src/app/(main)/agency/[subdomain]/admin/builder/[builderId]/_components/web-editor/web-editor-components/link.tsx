@@ -44,7 +44,7 @@ const LinkComponent = (props: Props) => {
     <div
       style={styles}
       draggable = {!(state.editor.liveMode || state.editor.previewMode)}
-      onDragStart={(e) => handleDragStart(e, 'text')}
+      onDragStart={(e) => handleDragStart(e, 'link')}
       onClick={handleOnClickBody}
       className={clsx(
         'p-[2px] w-full m-[5px] relative text-[16px] transition-all',

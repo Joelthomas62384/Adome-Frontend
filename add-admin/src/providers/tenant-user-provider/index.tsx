@@ -40,6 +40,7 @@ const TenantUserProvider = ({ children }: Props) => {
   });
   const router = useRouter()
   useEffect(() => {
+    console.log(data)
     
     if (!isLoading && !isError && data) {
       dispatch(setUserData({ user: data, role:data.role,  isLoggedIn: true }));
