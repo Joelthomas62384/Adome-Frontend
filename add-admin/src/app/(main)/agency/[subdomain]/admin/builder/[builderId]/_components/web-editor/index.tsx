@@ -77,7 +77,7 @@ const WebEditor = ({ webPageId, liveMode }: Props) => {
   if (isLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <Spinner />
+        <Spinner size={'large'} />
       </div>
     )
   }

@@ -11,17 +11,21 @@ import WebEditor from './admin/builder/[builderId]/_components/web-editor'
 type Props = {}
 
 const page = (props: Props) => {
+  
   const {schemaName} = useSelector((state:RootState)=>state.app)
   const fetchLandingPage = async ()=>{
     const response = await axiosInstance.get(`builder/${schemaName}/tenant-default-website`)
     return response?.data
   }
 
-  const {data , isLoading , isError} = useQuery({
-    queryKey : ['landing-page'],
-    queryFn : fetchLandingPage,
-    retry : false,
-  })
+  const { data, isLoading, isError } = useQuery<any, Error>({
+    queryKey: ['landing-page'],
+    queryFn: fetchLandingPage,
+    retry: false,
+    staleTime: 1000 * 60 * 60 * 24, 
+  });
+  
+  
   useEffect(() => {
    console.log(data)
   }, [data])
@@ -29,7 +33,7 @@ const page = (props: Props) => {
   return (
     <div className="h-screen overflow-hidden">
     {data && (
-      <EditorProvider webId={data.id} pageDetails={data.web_data}>
+      <EditorProvider  webId={data.id} pageDetails={data.web_data}>
         <WebEditor webPageId={data.id} liveMode={true} />
       </EditorProvider>
     )}

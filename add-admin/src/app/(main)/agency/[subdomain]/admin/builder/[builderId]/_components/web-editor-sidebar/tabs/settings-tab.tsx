@@ -469,7 +469,7 @@ const SettingsTab = (props: Props) => {
             <Label className="text-muted-foreground">Background Color</Label>
             <div className="flex  border-[1px] rounded-md overflow-clip">
 
-                <BackgroundColorPicker state={state} id="background" dispatch = {dispatch}  />
+                <BackgroundColorPicker state={state} id="background" dispatch = {dispatch}   />
               <Input
                 placeholder="#HFI245"
                 className="!border-y-0 rounded-none !border-r-0 mr-2"

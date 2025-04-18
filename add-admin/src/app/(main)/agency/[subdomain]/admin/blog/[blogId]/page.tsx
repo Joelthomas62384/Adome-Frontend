@@ -155,6 +155,7 @@ const Page = ({params} : Props) => {
     htmlContent={htmlContent}
     setHtmlContent={setHtmlContent}
     className="w-[94%] mx-auto h-screen mt-5"
+    
   />
 }
 

@@ -7,6 +7,7 @@ import { v4 } from 'uuid'
 import clsx from 'clsx'
 import { Badge } from '@/components/ui/badge'
 import { defaultStyles, EditorBtns } from '@/constants'
+import { Trash } from 'lucide-react'
 
 type Props = {
   element: EditorElement
@@ -71,12 +72,22 @@ const TwoColumns = (props: Props) => {
     }
   }
 
+  
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
   }
   const handleDragStart = (e: React.DragEvent, type: string) => {
     if (type === '__body') return
     e.dataTransfer.setData('componentType', type)
+  }
+
+  const handleDeleteElement = () => {
+    dispatch({
+      type: 'DELETE_ELEMENT',
+      payload: {
+        elementDetails: props.element,
+      },
+    })
   }
 
   const handleOnClickBody = (e: React.MouseEvent) => {
@@ -124,6 +135,16 @@ const TwoColumns = (props: Props) => {
             element={childElement}
           />
         ))}
+         {state.editor.selectedElement.id === props.element.id &&
+        !state.editor.liveMode && (
+          <div className="absolute bg-blue-600  px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
+            <Trash
+              className="cursor-pointer"
+              size={16}
+              onClick={handleDeleteElement}
+            />
+          </div>
+        )}
     </div>
   )
 }

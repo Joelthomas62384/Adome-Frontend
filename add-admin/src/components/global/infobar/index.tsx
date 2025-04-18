@@ -8,7 +8,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { LucideBell, Plus } from 'lucide-react'
+import { Edit, LucideBell, Plus } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +30,7 @@ import CourseDialog from './_components/course-dialog'
 import { ModeToggle } from '@/components/theme-toggle'
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
 import Link from 'next/link'
+import ModuleDialog from './_components/course-module-dialog'
 
 type Props = {
   className?: string
@@ -71,6 +72,7 @@ const InfoBar = ({ className }: Props) => {
       { pathName.endsWith('/admin/blog') && <BlogDialog/>}
       { pathName.endsWith('/admin/builder') && <WebDialog/>}
       { pathName.endsWith('/admin/courses') && <Link href={'/admin/courses/create'}><Button>Create course</Button></Link>}
+      { pathName.endsWith('/modules') && <ModuleDialog />}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

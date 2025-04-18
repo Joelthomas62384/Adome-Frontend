@@ -30,6 +30,7 @@ type Props = {
     htmlContent?: string | undefined
     setHtmlContent?: React.Dispatch<React.SetStateAction<string | undefined>>
     className ? : string
+    documentId? : string
   }
 
 const BlockTextEditor = ({
@@ -46,7 +47,9 @@ const BlockTextEditor = ({
     disabled,
     htmlContent,
     setHtmlContent,
-    className
+    className,
+    documentId 
+
 }: Props) => {
     const [openNode, setOpenNode] = useState<boolean>(false)
     const [openLink, setOpenLink] = useState<boolean>(false)
@@ -68,7 +71,7 @@ const BlockTextEditor = ({
               ? onEdit && "mb-5"
               : " rounded-xl px-10 py-5 " + className,
           )}
-          key={JSON.stringify(content)}
+          key={JSON.stringify(content)[0]}
           initialContent={content}
          editorProps={{
             editable: () => !disabled as boolean,

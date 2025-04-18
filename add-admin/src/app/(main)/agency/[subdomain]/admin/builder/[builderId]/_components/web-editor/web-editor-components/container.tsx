@@ -19,10 +19,37 @@ const Container = ({ element }: Props) => {
   const { id, content, name, styles, type } = element
   const { state, dispatch } = useEditor()
 
-  const handleOnDrop = (e: React.DragEvent, type: string) => {
+  const handleOnDrop = (e: React.DragEvent, type: string  ) => {
     e.stopPropagation()
+    const existingElementId = e.dataTransfer.getData('existingElementId')
     if(state.editor.previewMode || state.editor.liveMode) return
+    if(existingElementId){
+      
+      
+      const selectedElement = JSON.parse(JSON.stringify(state.editor.selectedElement));
+      selectedElement.id = v4()
+      dispatch({
+        type: 'ADD_ELEMENT',
+        payload: {
+          containerId: id,
+          elementDetails : selectedElement
+        },
+      });
+      if (!e.ctrlKey && !e.metaKey) {
+        dispatch({
+          type: 'DELETE_ELEMENT',
+          payload: {
+            elementDetails: state.editor.selectedElement,
+          },
+        });
+      }
+
+
+    }else{
+
+   
     const componentType = e.dataTransfer.getData('componentType') as EditorBtns
+    console.log(componentType)
 
     switch (componentType) {
       case 'text':
@@ -152,6 +179,8 @@ const Container = ({ element }: Props) => {
 
 
     }
+    }
+
 
   }
 
@@ -161,7 +190,7 @@ const Container = ({ element }: Props) => {
 
   const handleDragStart = (e: React.DragEvent, type: string) => {
     if (type === '__body') return
-    e.dataTransfer.setData('componentType', type)
+    e.dataTransfer.setData('existingElementId', id)
   }
 
   const handleOnClickBody = (e: React.MouseEvent) => {

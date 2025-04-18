@@ -50,7 +50,10 @@ const initialEditorState: EditorState['editor'] = {
             id: '__body',
             name: 'Body',
             styles: {
-               
+                minHeight: '100vh', // Ensure it takes at least the viewport height
+                height: 'auto', // Allow it to grow with content
+                overflow: 'auto',
+                paddingBottom: '600px',
                 // padding: initialEditorState.liveMode && 0,
                 // margin: 0
             },
@@ -152,7 +155,8 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
         case "ADD_ELEMENT":
             const updatedEditorState = {
                 ...state.editor,
-                elements: addAnElement(state.editor.elements, action)
+                elements: addAnElement(state.editor.elements, action),
+                selectedElement: action.payload.elementDetails,
             }
             const updatedHistory = [
                 ...state.history.history.slice(0, state.history.currentIndex + 1),
@@ -248,7 +252,7 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
                     ...state.history,
                     history: [
                         ...state.history.history.slice(0, state.history.currentIndex + 1),
-                        { ...state.editor }, // Save a copy of the current editor state
+                        { ...state.editor },
                     ],
                     currentIndex: state.history.currentIndex + 1,
                 },
@@ -301,7 +305,7 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
                                       ...element,
                                       styles: {
                                           ...element.styles,
-                                          padding: newLiveMode ? 0 : undefined,
+                                          padding: newLiveMode ? 0 : '5px',
                                       },
                                   }
                                 : element
