@@ -98,17 +98,17 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
     opacity2,
     image,
     ImageSize,
-  } = parseBackground(background);
-  console.log(gradient)
+  } = parseBackground(background as string);
+  console.log(gradient , direction , color1 , color2 ,opacity1 , opacity2 , image , ImageSize)
 
 
   const initialState: ColorState = {
     color: "",
     opacity: 1,
     gradient: gradient,
-    direction: direction,
-    color1: color1,
-    color2: color2,
+    direction: direction || 'to right',
+    color1: color1 || "rgb(255,255,255)",
+    color2: color2 || "rgb(255,255,255)",
     image: image,
     opacity1: opacity1,
     opacity2: opacity2,
@@ -195,18 +195,42 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
   };
 
 
+
+  const hexToRgba = (color: string, alpha: number): string => {
+    if (!color) return `rgba(NaN, 0, 0, ${alpha})`;
   
-
-
-
-
-  const hexToRgba = (hex: string, alpha: number) => {
-    // console.log(hex)
-    let r = parseInt(hex.substring(1, 3), 16);
-    let g = parseInt(hex.substring(3, 5), 16);
-    let b = parseInt(hex.substring(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    if (color.startsWith('rgba')) {
+      return color.replace(/[\d\.]+\)$/g, `${alpha})`);
+    }
+  
+    if (color.startsWith('rgb')) {
+      const values = color.match(/\d+/g);
+      if (values && values.length === 3) {
+        const [r, g, b] = values;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+      return `rgba(0, 0, 0, ${alpha})`;
+    }
+  
+    if (color.startsWith('#')) {
+      let hex = color.replace('#', '');
+      if (hex.length === 3) {
+        hex = hex.split('').map(c => c + c).join('');
+      }
+  
+      if (hex.length !== 6) return `rgba(0, 0, 0, ${alpha})`;
+  
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+  
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+  
+    // fallback
+    return `rgba(NaN, 0, 0, ${alpha})`;
   };
+  
   // useEffect(() => {
   //   const newColor = hexToRgba(color, alpha)
   //   setnewColor(newColor)
@@ -240,7 +264,7 @@ const BackgroundColorPicker = ({ dispatch, state, bgImage = false, id: PropId }:
     if (colorState.gradient) {
       let color = `linear-gradient(${colorState.direction}, ${hexToRgba(colorState.color1, colorState.opacity1)}, ${hexToRgba(colorState.color2, colorState.opacity2)}) `
       if (colorState.image){
-        color += `, url("${colorState.image}") no-repeat center / ${colorState.ImageSize}`
+        color += `, url("${colorState.image}") no-repeat center / ${colorState.ImageSize ||'cover'}`
       }
       // console.log(color)
       console.log(color)

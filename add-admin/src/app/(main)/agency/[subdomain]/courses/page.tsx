@@ -59,6 +59,9 @@ const Page = () => {
     [isFetchingNextPage, hasNextPage, fetchNextPage]
   );
 
+  const handleOnClick = (id:number)=>{
+
+  }
   return (
     <div className="flex flex-col items-center p-6">
       <GradientText
@@ -101,7 +104,8 @@ const Page = () => {
                   title={course.title}
                   thumbnail={course.thumbnail}
                   price={course.price}
-                  description={course.description}
+                  content={course.content}
+                  onClick={handleOnClick}
                 />
               </div>
             );

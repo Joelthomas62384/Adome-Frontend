@@ -61,6 +61,43 @@ const WebEditor = ({ webPageId, liveMode }: Props) => {
       })
     }
   }, [liveMode, dispatch])
+  useEffect(() => {
+    if (liveMode) {
+      dispatch({
+        type: 'TOGGLE_LIVE_MODE',
+        payload: {
+          value: true,
+        },
+      });
+    }
+  }, [liveMode, dispatch]);
+
+  // Handle Delete key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.key === 'Delete' || e.key === 'Backspace') &&
+        (e.altKey || e.metaKey) &&
+        !state.editor.liveMode
+      ) {
+        const selectedElement = state.editor.selectedElement;
+        if (selectedElement.id && selectedElement.type !== '__body') {
+          dispatch({
+            type: 'DELETE_ELEMENT',
+            payload: {
+              elementDetails: selectedElement,
+            },
+          });
+       
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [state.editor.liveMode, state.editor.selectedElement, dispatch]);
 
   const handleClick = () => {
     dispatch({

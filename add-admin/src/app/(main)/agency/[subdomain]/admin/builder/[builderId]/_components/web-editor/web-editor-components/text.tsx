@@ -14,7 +14,8 @@ const TextComponent = (props: Props) => {
     const {dispatch , state } = useEditor()
     const handleDragStart = (e: React.DragEvent, type: string) => {
         if (type === '__body') return
-        e.dataTransfer.setData('componentType', type)
+        
+        e.dataTransfer.setData('existingElementId', props.element.id)
       }
 
     const handleDeleteElement = () => {

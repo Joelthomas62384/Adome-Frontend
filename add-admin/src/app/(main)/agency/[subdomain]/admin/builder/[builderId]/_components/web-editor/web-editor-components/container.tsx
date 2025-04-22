@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 
 
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge';
 import Recursive from './recursive';
 import { Trash } from 'lucide-react';
@@ -18,6 +18,7 @@ type Props = {
 const Container = ({ element }: Props) => {
   const { id, content, name, styles, type } = element
   const { state, dispatch } = useEditor()
+  const [isDragging, setIsDragging] = useState(false)
 
   const handleOnDrop = (e: React.DragEvent, type: string  ) => {
     e.stopPropagation()
@@ -179,15 +180,27 @@ const Container = ({ element }: Props) => {
 
 
     }
+
     }
 
-
+    setIsDragging(false)
   }
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
+    e.stopPropagation()
+    if(!state.editor.liveMode){
+
+      setIsDragging(true)
+    }
+    console.log(isDragging)
+    
   }
 
+  const handleDragLeave = (e:React.DragEvent) => {
+    e.stopPropagation()
+    setIsDragging(false)
+  }
   const handleDragStart = (e: React.DragEvent, type: string) => {
     if (type === '__body') return
     e.dataTransfer.setData('existingElementId', id)
@@ -216,6 +229,8 @@ const Container = ({ element }: Props) => {
     <div
       style={styles}
       className={clsx('relative p-4 transition-all group', {
+        '!border-blue-400 !border-solid !border-4 shadow-lg': isDragging,
+        'scale-[103%] duration-200' : isDragging && type!=='__body',
         'max-w-full w-full': type === 'container' || type === '2Col',
         'h-fit': type === 'container',
         'h-full': type === '__body',
@@ -231,9 +246,11 @@ const Container = ({ element }: Props) => {
           state.editor.selectedElement.type === '__body',
         '!border-solid':
           state.editor.selectedElement.id === id && !state.editor.liveMode,
-        'border-dashed border-[1px] border-slate-300': !state.editor.liveMode,
+        'border-dashed border-[1px] border-slate-300': !state.editor.liveMode ,
+        'pb-96' : (!state.editor.liveMode && type==="__body")
       })}
       onDrop={(e) => handleOnDrop(e, id)}
+      onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       draggable = {!(state.editor.liveMode || state.editor.previewMode)}
       onClick={handleOnClickBody}

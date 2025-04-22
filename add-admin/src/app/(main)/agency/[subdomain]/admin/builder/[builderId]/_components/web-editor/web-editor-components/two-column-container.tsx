@@ -17,68 +17,178 @@ const TwoColumns = (props: Props) => {
   const { id, content, type } = props.element
   const { dispatch, state } = useEditor()
 
-  const handleOnDrop = (e: React.DragEvent, type: string) => {
-    e.stopPropagation()
-    const componentType = e.dataTransfer.getData('componentType') as EditorBtns
-    switch (componentType) {
-      case 'text':
-        dispatch({
-          type: 'ADD_ELEMENT',
-          payload: {
-            containerId: id,
-            elementDetails: {
-              content: { innerText: 'Text Component' },
-              id: v4(),
-              name: 'Text',
-              styles: {
-                color: 'black',
-                ...defaultStyles,
-              },
-              type: 'text',
-            },
-          },
-        })
-        break
-      case 'container':
-        dispatch({
-          type: 'ADD_ELEMENT',
-          payload: {
-            containerId: id,
-            elementDetails: {
-              content: [],
-              id: v4(),
-              name: 'Container',
-              styles: { ...defaultStyles },
-              type: 'container',
-            },
-          },
-        })
-        break
-      case '2Col':
-        dispatch({
-          type: 'ADD_ELEMENT',
-          payload: {
-            containerId: id,
-            elementDetails: {
-              content: [],
-              id: v4(),
-              name: 'Two Columns',
-              styles: { ...defaultStyles },
-              type: '2Col',
-            },
-          },
-        })
-        break
-    }
-  }
-
+   const handleOnDrop = (e: React.DragEvent, type: string  ) => {
+     e.stopPropagation()
+     const existingElementId = e.dataTransfer.getData('existingElementId')
+     if(state.editor.previewMode || state.editor.liveMode) return
+     if(existingElementId){
+       
+       
+       const selectedElement = JSON.parse(JSON.stringify(state.editor.selectedElement));
+       selectedElement.id = v4()
+       dispatch({
+         type: 'ADD_ELEMENT',
+         payload: {
+           containerId: id,
+           elementDetails : selectedElement
+         },
+       });
+       if (!e.ctrlKey && !e.metaKey) {
+         dispatch({
+           type: 'DELETE_ELEMENT',
+           payload: {
+             elementDetails: state.editor.selectedElement,
+           },
+         });
+       }
+ 
+ 
+     }else{
+ 
+    
+     const componentType = e.dataTransfer.getData('componentType') as EditorBtns
+     console.log(componentType)
+ 
+     switch (componentType) {
+       case 'text':
+         dispatch({
+           type: 'ADD_ELEMENT',
+           payload: {
+             containerId: id,
+             elementDetails: {
+               content: { innerText: 'Text Element' },
+               id: v4(),
+               name: 'Text',
+               styles: {
+                 color: 'black',
+                 ...defaultStyles,
+               },
+               type: 'text',
+             },
+           },
+         });
+         break;
+       case 'container':
+         dispatch({
+           type: 'ADD_ELEMENT',
+           payload: {
+             containerId: id,
+             elementDetails: {
+               content: [],
+               id: v4(),
+               name: 'Container',
+               styles: { ...defaultStyles },
+               type: 'container',
+             },
+           },
+         })
+         break
+       case "video":
+         dispatch({
+           type: 'ADD_ELEMENT',
+           payload: {
+             containerId: id,
+             elementDetails: {
+               content: { src: "https://www.youtube.com/embed/tpoOBvlvVl4?si=aj-JrXjfQUbvswEo" },
+               id: v4(),
+               name: 'Video',
+               styles: {
+                 color: 'black',
+                 width: '100%',
+                 height: 'auto',
+                 objectFit: 'cover',
+                 ...defaultStyles,
+               },
+               type: 'video',
+             },
+           }
+         })
+       case '2Col':
+         dispatch({
+           type: 'ADD_ELEMENT',
+           payload: {
+             containerId: id,
+             elementDetails: {
+               content: [
+                 {
+                   content: [],
+                   id: v4(),
+                   name: 'Container',
+                   styles: { ...defaultStyles, width: '100%' },
+                   type: 'container',
+                 },
+                 {
+                   content: [],
+                   id: v4(),
+                   name: 'Container',
+                   styles: { ...defaultStyles, width: '100%' },
+                   type: 'container',
+                 },
+               ],
+               id: v4(),
+               name: 'Two Columns',
+               styles: { ...defaultStyles, display: 'flex' },
+               type: '2Col',
+             },
+           },
+         })
+         break
+       case 'link':
+         dispatch({
+           type: 'ADD_ELEMENT',
+           payload: {
+             containerId: id,
+             elementDetails: {
+               content: {
+                 innerText: 'Link Element',
+                 href: '#',
+               },
+               id: v4(),
+               name: 'Link',
+               styles: {
+                 color: 'black',
+                 ...defaultStyles,
+               },
+               type: 'link',
+             },
+           },
+         })
+         break
+         case 'navbar':
+           dispatch({
+             type: 'ADD_ELEMENT',
+             payload: {
+               containerId: id,
+               elementDetails: {
+                 content: {
+                  
+                 },
+                 id: v4(),
+                 name: 'navbar',
+                 styles: {
+                   
+                 },
+                 type: 'navbar',
+               },
+             },
+           })
+           break
+ 
+ 
+ 
+     }
+     }
+ 
+ 
+   }
   
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
   }
   const handleDragStart = (e: React.DragEvent, type: string) => {
     if (type === '__body') return
-    e.dataTransfer.setData('componentType', type)
+    e.stopPropagation()
+    e.dataTransfer.setData('existingElementId', id)
   }
 
   const handleDeleteElement = () => {

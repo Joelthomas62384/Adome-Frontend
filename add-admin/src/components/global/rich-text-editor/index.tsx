@@ -71,7 +71,7 @@ const BlockTextEditor = ({
               ? onEdit && "mb-5"
               : " rounded-xl px-10 py-5 " + className,
           )}
-          key={JSON.stringify(content)[0]}
+          key={ (content && JSON.stringify(content)[0] )|| "editor"}
           initialContent={content}
          editorProps={{
             editable: () => !disabled as boolean,

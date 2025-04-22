@@ -9,6 +9,7 @@ import TabList from './tabs'
 import SettingsTab from './tabs/settings-tab'
 import MediaBucketTab from './tabs/media-bucket-tab'
 import ComponentsTab from './tabs/components-tabs'
+import Layers from './tabs/layers'
 
 type Props = {}
 
@@ -64,6 +65,17 @@ const WebEditorSidebar = (props: Props) => {
               </SheetDescription>
             </SheetHeader>
             <ComponentsTab />
+          </TabsContent>
+
+          <TabsContent value="Layers">
+            <SheetHeader className="text-left p-6 ">
+              <SheetTitle>Layers</SheetTitle>
+              <SheetDescription>
+                You can view the canvas like a tree structure.
+              </SheetDescription>
+            </SheetHeader>
+            {/* <ComponentsTab /> */}
+            <Layers />
           </TabsContent>
         </div>
       </SheetContent>

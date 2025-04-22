@@ -50,10 +50,8 @@ const initialEditorState: EditorState['editor'] = {
             id: '__body',
             name: 'Body',
             styles: {
-                minHeight: '100vh', // Ensure it takes at least the viewport height
-                height: 'auto', // Allow it to grow with content
-                overflow: 'auto',
-                paddingBottom: '600px',
+               
+                // paddingBottom: '600px',
                 // padding: initialEditorState.liveMode && 0,
                 // margin: 0
             },
@@ -222,7 +220,7 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
             }
             const updatedHistoryAfterDelete = [
                 ...state.history.history.slice(0, state.history.currentIndex + 1),
-                { ...updatedEditorStateAfterDelete }, // Save a copy of the updated state
+                { ...updatedEditorStateAfterDelete }, 
             ]
 
             const deletedState = {
@@ -281,6 +279,7 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
                                 styles: {
                                     ...element.styles,
                                     padding: !state.editor.previewMode ? 0 : undefined,
+                                    paddingBottom : state.editor.previewMode ? "600px" : undefined
                                 },
                             }
                             : element

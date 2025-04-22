@@ -88,7 +88,7 @@ const CourseCards = ({
 
       <CardContent className="px-4 pb-2">
         <CardDescription>
-          {content.slice(0, 70)}...
+          {content && content.slice(0, 70)}...
         </CardDescription>
       </CardContent>
 

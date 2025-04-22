@@ -117,7 +117,7 @@ export interface ColorState {
     | { type: "SET_OPACITY2"; payload: number }
     | {type : "SET_SELECTED_COLOR"; payload: number }
     | { type: "SET_IMAGE_SIZE"; payload: string } 
-    | { type: "RESET" }; // To reset the state
+    | { type: "RESET" ; payload : ColorState }; 
 
 
 

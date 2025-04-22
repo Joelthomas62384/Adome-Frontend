@@ -210,7 +210,7 @@ const SettingsTab = (props: Props) => {
                   backgroundColor:
                     state.editor.selectedElement.styles.color,
                 }}
-              /> */} <BackgroundColorPicker state={state} id="color" dispatch = {dispatch}  />
+              /> */} <BackgroundColorPicker state={state} id="color" dispatch = {dispatch}  key={state.editor.selectedElement.id} />
 
               <Input
                 id="color"
@@ -469,7 +469,7 @@ const SettingsTab = (props: Props) => {
             <Label className="text-muted-foreground">Background Color</Label>
             <div className="flex  border-[1px] rounded-md overflow-clip">
 
-                <BackgroundColorPicker state={state} id="background" dispatch = {dispatch}   />
+                <BackgroundColorPicker state={state} id="background" dispatch = {dispatch}  key={state.editor.selectedElement.id}  />
               <Input
                 placeholder="#HFI245"
                 className="!border-y-0 rounded-none !border-r-0 mr-2"
