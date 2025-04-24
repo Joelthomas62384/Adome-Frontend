@@ -82,13 +82,13 @@ const CourseCards = ({
           />
         </AspectRatio>
         <div className="p-4">
-          <CardTitle className="text-lg font-bold">{title}</CardTitle>
+          <CardTitle className="text-lg font-bold">{title && title.slice(0 , 30)} {title.length > 30 && "..."}</CardTitle>
         </div>
       </CardHeader>
 
       <CardContent className="px-4 pb-2">
         <CardDescription>
-          {content && content.slice(0, 70)}...
+          {content && content.slice(0, 70)} {content.length > 70 && "..."}
         </CardDescription>
       </CardContent>
 

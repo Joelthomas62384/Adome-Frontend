@@ -9,11 +9,12 @@ import { RootState } from '@/Redux/store'
 import ChapterCard from './_components/chapter-card'
 
 type Props = {
-  params: Promise<{ moduleId: string }>;// Assuming chapter ID is passed as a prop
+  params: Promise<{ moduleId: string }>;
 }
 
 const page = ({ params }: Props) => {
   const {moduleId} = React.use(params)
+  console.log(moduleId)
 
   const {schemaName} = useSelector((state:RootState)=>state.app)
   const { data, isLoading, isError } = useQuery(

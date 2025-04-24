@@ -24,7 +24,7 @@ const ModuleCard = ({ module }: Props) => {
   const router = useRouter()
 
   return (
-    <Card  className="group relative bg-themeBlack overflow-hidden transition-all hover:shadow-lg">
+    <Card  className="group relative bg-themeBlack overflow-hidden transition-all hover:shadow-lg cursor-pointer">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">{module.title}</CardTitle>
       </CardHeader>
