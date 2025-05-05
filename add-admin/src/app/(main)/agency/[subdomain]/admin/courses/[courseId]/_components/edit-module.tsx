@@ -19,47 +19,44 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AutosizeTextarea } from '@/components/ui/text-area'
 import { usePathname } from 'next/navigation'
 import { v4 } from 'uuid'
-const useCourseIdFromPath = () => {
-  const pathname = usePathname()
-  const courseId = React.useMemo(() => {
-    const parts = pathname.split('/')
-    const index = parts.findIndex(p => p === 'courses')
-    return parts[index + 1] || null
-  }, [pathname])
-  return courseId
-}
+import { Pencil, Trash2 } from 'lucide-react'
+
 
 type module = {
-  course : string,
   title : string,
   description : string,
   created_at? : string,
-  id ? : string
+  id ? : number
 }
-const ModuleDialog = () => {
+type Props = {
+  module : module,
+  courseId : string
+  
+}
+const ModuleEditDialog = ({module , courseId}:Props) => {
     const { schemaName } = useSelector((state: RootState) => state.app)
-    const courseId = useCourseIdFromPath()
+    const moduleId = module.id
     
     
   const queryClient = useQueryClient()
 
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
+  const [title, setTitle] = useState(module.title)
+  const [description, setDescription] = useState(module.description)
   const [isOpen, setIsOpen] = useState(false)
 
   // const handleSubmit = async () => {
   //   try {
-  //     if (!schemaName || !courseId) return toast.error("Missing course or tenant info")
+  //     if (!schemaName || !moduleId) return toast.error("Missing course or tenant info")
 
-  //     await axiosInstance.post(`course/${schemaName}/manage-modules/${courseId}`, {
-  //       course:courseId,
+  //     await axiosInstance.post(`course/${schemaName}/manage-modules/${moduleId}`, {
+  //       course:moduleId,
   //       title,
   //       description,
   //     })
   //     toast.success("Module created")
 
   //     queryClient.invalidateQueries({
-  //       queryKey: ['course-modules', courseId]
+  //       queryKey: ['course-modules', moduleId]
   //     })
 
   //     setIsOpen(false)
@@ -72,69 +69,57 @@ const ModuleDialog = () => {
   // }
 
   // {
-  //   course:courseId,
+  //   course:moduleId,
   //   title,
   //   description,
   // }
-  const createModule = async (module : module)=>{
+  const editModule = async (module: module) => {
+    const { id, ...rest } = module;
+    if (!schemaName || !id) throw new Error("Missing schema or module ID");
   
-          if (!schemaName || !courseId) throw("schemaName or courseId missing")
-    
-          await axiosInstance.post(`course/${schemaName}/manage-modules/${courseId}`,module )
-          // toast.success("Module created")
-    
-      //  WIP
-        
-       
+    const response = await axiosInstance.put(`course/${schemaName}/manage-modules/${id}`, rest);
+    return response.data;
   }
-
-  const moduleCreateMutation = useMutation({
-    mutationKey : ['module-create' , courseId],
-    mutationFn : createModule,
-    onMutate : (data : module)=>{
-
-      const newData = {
-        ...data,
-        id : v4(),
-        created_at : new Date()
-      }
-        setIsOpen(false)
-          setTitle("")
-          setDescription("")
-        queryClient.setQueryData(['course-modules', courseId],(oldData:module[])=>{
-          return [
-            ...oldData,
-            newData,
-        ]
-        })
-      toast.success("Module created successfully", {
-        description : "Module has been created successfully!"
+  
+  const editMutation = useMutation({
+    mutationKey : ['module-edit' , moduleId],
+    mutationFn : editModule,
+    onMutate : (newData:module)=>{
+      console.log("in on mutate")
+      console.log(newData)
+      toast.success("Module updated successfully!",{
+        description : `Module with the id : ${moduleId} has been updated successfully`
       })
-      return newData
-    },
-    onSettled : ()=>{
-      queryClient.invalidateQueries({queryKey :['course-modules', courseId]})
-    },
-    onError : (error)=>{
-      toast.error("Module creation failed",{
-        description : "Module creation failed due to an unexpected error on the server. "
+      queryClient.setQueryData(['course-modules', courseId],(oldData:any)=>{
+        console.log(oldData)
+        console.log(module.id)
+       return oldData.map((value:module)=>{
+        return value.id === moduleId ? {...value , title, description} : value
+       })
       })
+      setIsOpen(false)
+      setTitle('')
+      setDescription('')
+
     }
   })
 
+  
 
   const handleSubmit = ()=>{
-    moduleCreateMutation.mutate({course: courseId as string , title , description})
+    console.log(moduleId)
+    editMutation.mutate({id : moduleId, title , description})
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setIsOpen(true)}>Create Module +</Button>
+      <DialogTrigger >
+        {/* <Button onClick={() => setIsOpen(true)}>Create Module +</Button> */}
+         <Pencil className="w-4 h-4" />
       </DialogTrigger>
       <DialogContent className='bg-themeBlack p-6 rounded-lg'>
         <DialogHeader>
-          <DialogTitle>Create Module</DialogTitle>
+          <DialogTitle>Update Module</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -159,11 +144,11 @@ const ModuleDialog = () => {
           onClick={handleSubmit}
           disabled={!(title && description)}
         >
-          Submit
+          update
         </Button>
       </DialogContent>
     </Dialog>
   )
 }
 
-export default ModuleDialog
+export default ModuleEditDialog

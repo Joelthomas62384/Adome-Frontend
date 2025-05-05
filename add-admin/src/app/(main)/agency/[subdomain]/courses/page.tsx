@@ -10,12 +10,17 @@ import axiosInstance from "@/axios/public-instance";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
 import { useRouter } from "next/navigation";
+import { loadRazorpay } from "@/constants";
 
 const PAGE_LIMIT = 6;
 
 const Page = () => {
   const router = useRouter();
   const { schemaName } = useSelector((state: RootState) => state.app);
+  const res = loadRazorpay()
+  if(!res){
+    alert("Razorpay loading error ")
+  }
 
   const fetchCourses = async ({ pageParam = 1 }) => {
     const response = await axiosInstance.get(`course/${schemaName}/get-courses`, {
@@ -97,7 +102,7 @@ const Page = () => {
               <div
                 key={course.id}
                 ref={isLast ? lastCourseRef : null}
-                onClick={() => router.push(`/course/${course.id}`)}
+                onClick={() => router.push(`/courses/${course.id}`)}
               >
                 <CourseCard
                   id={course.id}
@@ -106,6 +111,7 @@ const Page = () => {
                   price={course.price}
                   content={course.content}
                   onClick={handleOnClick}
+                  owned={course.owned}
                 />
               </div>
             );

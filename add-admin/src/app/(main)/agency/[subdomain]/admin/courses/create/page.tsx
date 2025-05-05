@@ -59,7 +59,7 @@ const Page = (props: Props) => {
           return {
             pages: [
               {
-                courses: [newData], // Changed from results to courses
+                courses: [newData], 
                 next: null,
                 previous: null,
               },
@@ -74,7 +74,7 @@ const Page = (props: Props) => {
             if (index === 0) {
               return {
                 ...page,
-                courses: [newData, ...(page.courses || [])], // Changed from results to courses
+                courses: [newData, ...(page.courses || [])], 
               };
             }
             return page;

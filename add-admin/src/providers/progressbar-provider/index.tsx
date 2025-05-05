@@ -1,26 +1,34 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import NProgress from "nprogress";
-import "nprogress/nprogress.css"; 
+import "nprogress/nprogress.css";
 
-NProgress.configure({ showSpinner: false });
+NProgress.configure({ showSpinner: false, minimum: 0.1, speed: 200 });
 
 export default function ProgressBarProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isTransitioning = useRef(false);
 
   useEffect(() => {
-    NProgress.start();
-    const timer = setTimeout(() => NProgress.done(), 1000);
+    if (!isTransitioning.current) {
+      isTransitioning.current = true;
+      NProgress.start();
+    }
+
+    const timer = setTimeout(() => {
+      NProgress.done();
+      isTransitioning.current = false;
+    }, 300); 
 
     return () => {
       clearTimeout(timer);
       NProgress.done();
+      isTransitioning.current = false;
     };
-  }, [pathname, searchParams]); 
+  }, [pathname, searchParams]);
 
   return <>{children}</>;
 }

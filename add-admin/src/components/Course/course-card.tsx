@@ -13,6 +13,10 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ArrowRight, Edit, Edit2, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { loadRazorpay } from "@/constants";
+import axiosInstance from "@/axios/public-instance";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
 
 type Props = {
   title: string;
@@ -23,7 +27,8 @@ type Props = {
   is_admin?: boolean;
   sm?: boolean;
   price?: string;
-  onClick : (id:number)=>void
+  onClick : (id:number)=>void,
+  owned ? : boolean
 };
 
 const CourseCards = ({
@@ -35,9 +40,54 @@ const CourseCards = ({
   is_admin = false,
   sm,
   price,
-  onClick 
+  onClick ,
+  owned= false
 }: Props) => {
   const router = useRouter();
+  const {schemaName , appname ,tenant } = useSelector((state:RootState)=>state.app)
+  const {user } = useSelector((state:RootState)=>state.user.user)
+  // const res = loadRazorpay()
+  // if (!res) {
+  //   alert("Razorpay SDK failed to load");
+  //   return;
+  // }
+
+  const handlePayment = async ()=>{
+    const response = await axiosInstance.post(`payment/${schemaName}/create-order` , {
+      course_id : id
+    })
+    const { razorpay_order_id, order_amount: razorpayAmount, currency, razorpay_key_id , order_id } = response.data;
+    const options = {
+      key: razorpay_key_id,
+      amount: razorpayAmount,
+      currency,
+      name: appname,
+      description: tenant.description?.slice(0 , 30) + "...",
+      order_id: razorpay_order_id,
+      handler: async function (response: any) {
+        // TODO: Step 3 - verify on server
+        await axiosInstance.post(`payment/${schemaName}/verify-order`, {
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+        });
+
+        alert("Payment successful!");
+      },
+      prefill: {
+        name: user.full_name,
+        email: user.email,
+      },
+      theme: {
+        color: '#09090B',
+      },
+
+    };
+    const paymentObject = new (window as any).Razorpay(options);
+    paymentObject.open();
+
+
+  }
 
   return (
     <Card
@@ -96,13 +146,30 @@ const CourseCards = ({
         
           <div className="flex flex-col items-end text-right">
             
-            <Button
+       { !owned ?    <Button
               size="sm"
-              onClick={() => router.push(`/course/${id}`)}
-              className="mt-1 bg-transparant text-green-500 hover:bg-transparent"
+              onClick={(e) => {
+        e.stopPropagation()
+
+                console.log("working")
+                handlePayment()
+              }}
+              className="mt-1 bg-transparant text-green-500 hover:bg-green-500 hover:text-themeTextWhite "
             >
                ₹{price} - Buy Now <ArrowRight />
+            </Button> : (
+              <Button
+              size="sm"
+              onClick={(e) => {
+        e.stopPropagation()
+
+               router.push('/courses/watch/' + id)
+              }}
+              className="mt-1 bg-transparant text-green-500 hover:bg-green-500 hover:text-themeTextWhite "
+            >
+               Watch Now <ArrowRight />
             </Button>
+            )}
           </div>
       </CardFooter>
     </Card>

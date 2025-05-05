@@ -73,6 +73,7 @@ const Navbar = ({ element }: Props) => {
     ...(isAdmin || user.is_staff ? [{ label: 'Admin', href: '/admin' }] : []),
     { label: 'Blog', href: '/blog' },
     { label: 'Courses', href: '/courses' },
+    { label: 'Communities', href: '/community' },
   ]
 
   const renderNavItem = (item: { label: string; href: string }) =>

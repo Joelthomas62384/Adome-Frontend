@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
 import { Button } from '@/components/ui/button'
-import { Menu as MenuIcon } from 'lucide-react'
+import { Menu as MenuIcon, Router } from 'lucide-react'
 import {
   Avatar,
   AvatarFallback,
@@ -20,18 +20,19 @@ import {
 } from '@/components/ui/dropdown-menu'
 import GlassSheet from '@/components/global/glass-sheet'
 import axiosInstance from '@/axios/public-instance'
-import { removeCookie } from 'typescript-cookie'
+import { getCookie, removeCookie } from 'typescript-cookie'
 import { logout } from '@/Redux/slices/user-details'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const Navbar = () => {
   const pathName = usePathname()
+  const router = useRouter()
 
-  if (pathName === '/' || pathName.startsWith('/admin') || pathName.startsWith("/login")) return
   const dispatch = useDispatch()
   const { tenant, schemaName } = useSelector((state: RootState) => state.app)
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const isAdmin = user?.is_admin
+  if (pathName === '/' || pathName.startsWith('/admin') || pathName.startsWith("/login")) return
 
   const handleLogout = async () => {
     const response = await axiosInstance.post(`user/${schemaName}/logout`)
@@ -43,15 +44,18 @@ const Navbar = () => {
     }
   }
 
+  const expiry = getCookie('expiry')
+
   const navItems = [
     { label: 'Home', href: '/' },
     ...(isAdmin || user.is_staff ? [{ label: 'Admin', href: '/admin' }] : []),
     { label: 'Blog', href: '/blog' },
     { label: 'Courses', href: '/courses' },
+    { label: 'Communities', href: '/community' },
   ]
 
   return (
-    <nav className="w-full px-6 py-4 flex justify-between items-center border-b border-border bg-black sticky top-0">
+    <nav className="w-full px-6 py-4 flex justify-between items-center border-b border-border z-[999] bg-black sticky top-0">
       <p className="text-2xl font-bold">{tenant.name}.</p>
 
       <div className="hidden lg:flex gap-4">
@@ -67,19 +71,27 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        {isLoggedIn ? (
-          <DropdownMenu>
+        {expiry ? (
+          <DropdownMenu >
             <DropdownMenuTrigger asChild>
               <Avatar className="cursor-pointer">
                 <AvatarImage src={user.user.profile_pic} alt={user.user.full_name} />
                 <AvatarFallback>{user.user.full_name?.[0]}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-themeBlack" align="end">
+            <DropdownMenuContent className="w-56 bg-themeBlack relative z-[1000]" align="end">
               <DropdownMenuLabel className="truncate max-w-full">
                 {user.user.full_name}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={()=>{
+                  router.push('/my-courses')
+                }}
+                className="font-medium cursor-pointer"
+              >
+                My Courses
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleLogout}
                 className="font-medium cursor-pointer"

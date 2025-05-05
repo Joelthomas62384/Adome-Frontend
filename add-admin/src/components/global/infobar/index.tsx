@@ -36,11 +36,22 @@ type Props = {
   className?: string
 }
 
+const useModuleIdPath = () => {
+  const pathname = usePathname()
+  console.log(pathname)
+  const courseId = React.useMemo(() => {
+    const parts = pathname.split('/')
+    const index = parts.findIndex(p => p === 'chapters')
+    return parts[index - 1] || null
+  }, [pathname])
+  return courseId
+}
 const InfoBar = ({ className }: Props) => {
   const user = useSelector((state: RootState) => state.user.user)  // Fix double `.user`
   const [fallBackName, setFallBackName] = useState<string>('U')
   const pathName = usePathname()
-
+  const moduleId = useModuleIdPath()
+  console.log(moduleId)
   // Logout function
   const logoutMutation = useMutation({
     mutationKey: ['logout'],
@@ -73,6 +84,7 @@ const InfoBar = ({ className }: Props) => {
       { pathName.endsWith('/admin/builder') && <WebDialog/>}
       { pathName.endsWith('/admin/courses') && <Link href={'/admin/courses/create'}><Button>Create course</Button></Link>}
       { pathName.endsWith('/modules') && <ModuleDialog />}
+      { pathName.endsWith('/chapters') && <Link href={`/admin/modules/${moduleId}/chapters/create`}><Button>Create Chapter</Button></Link>}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

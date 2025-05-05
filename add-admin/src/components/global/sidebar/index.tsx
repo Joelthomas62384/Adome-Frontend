@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { BookA, BookDashed, BookOpen, User } from "lucide-react"
+import { BookA, BookDashed, BookOpen, CreditCard, User } from "lucide-react"
 import { useSelector } from "react-redux"
 import { RootState } from "@/Redux/store"
 import { SidebarType } from "@/types"
@@ -13,12 +13,14 @@ const Sidebar = () => {
   const tenant = useSelector((state: RootState) => state.app.tenant)
   const menuItems: SidebarType[] = [
     { id: "1", name: "Dashboard", link: "/admin/", icon: <HomeDuoToneWhite /> },
-    { id: "2", name: "Users", link: "/admin/users", icon: <User className="text-themeTextGray"/>, permission: "hasStaffPermission" },
-    { id: "4", name: "Website Builder", link: "/admin/builder", icon: <GlobeDuoToneBlack />, permission: "hasBuilderPermission" },
-    { id: "6", name: "Courses", link: "/admin/courses", icon: <BookA className="text-themeTextGray"  size={20}/>, permission: "hasCoursesPermission" },
-    { id: "5", name: "Blog", link: "/admin/blog", icon: <BookOpen className="text-themeTextGray"  size={20}/>, permission: "hasSettingPermission" },
-    { id: "3", name: "Settings", link: "/admin/settings", icon: <Settings />, permission: "hasSettingPermission" },
+    { id: "2", name: "Users", link: "/admin/users", icon: <User className="text-themeTextGray" />, permission: "hasStaffPermission" },
+    { id: "3", name: "Courses", link: "/admin/courses", icon: <BookA className="text-themeTextGray" size={20} />, permission: "hasCoursesPermission" },
+    { id: "4", name: "Blog", link: "/admin/blog", icon: <BookOpen className="text-themeTextGray" size={20} />, permission: "hasSettingPermission" },
+    { id: "5", name: "Website Builder", link: "/admin/builder", icon: <GlobeDuoToneBlack />, permission: "hasBuilderPermission" },
+    { id: "6", name: "Payment Gateway", link: "/admin/payment", icon: <CreditCard className="text-themeTextGray" size={20} />, permission: "hasPaymentPermission" },
+    { id: "7", name: "Settings", link: "/admin/settings", icon: <Settings />, permission: "hasSettingPermission" },
   ]
+  
 
   const menuFilter = (menuItems: SidebarType[]) => {
     if (!user) return [] 

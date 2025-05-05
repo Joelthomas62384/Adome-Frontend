@@ -18,7 +18,7 @@ export type SidebarType = {
      name: string;
      link: string; 
      icon: JSX.Element
-     permission? : "hasStaffPermission" | "hasSettingPermission" | "hasBuilderPermission" | "hasBlogPermission" | "hasCommunityPermission" | "hasNewsletterPermission" | "hasCoursesPermission" 
+     permission? : "hasStaffPermission" | "hasSettingPermission" | "hasBuilderPermission" | "hasBlogPermission" | "hasCommunityPermission" | "hasNewsletterPermission" | "hasCoursesPermission" | "hasPaymentPermission" ;
  }
 //  hasStaffPermission: false,
 //  hasBlogPermission: false,

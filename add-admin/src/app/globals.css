@@ -284,6 +284,8 @@ html {
 
 * {
   outline: none !important;
+  scroll-behavior:  smooth;
+
 }
 /* 
 .novel-editor:focus {
@@ -296,3 +298,5 @@ html {
   outline: none !important;
   box-shadow: none !important;
 }
+
+

@@ -1,7 +1,6 @@
 "use client"
 
-import React from 'react'
-import axios from 'axios'
+import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import axiosInstance from '@/axios/public-instance'
 import { useSelector } from 'react-redux'
@@ -28,6 +27,10 @@ const page = ({ params }: Props) => {
     }
   )
 
+  useEffect(() => {
+   console.log(data)
+  }, [data])
+  
   if (isLoading) return <div>Loading...</div>
 
   if (isError) return <div>Error loading chapters</div>
@@ -37,9 +40,9 @@ const page = ({ params }: Props) => {
   }
 
   return (
-    <div>
+    <div className='flex gap-3 '>
       {data.map((chapter: any) => (
-        <ChapterCard key={chapter.id} chapter={chapter} />
+        <ChapterCard key={chapter.id} chapter={chapter}  moduleId={moduleId}/>
       ))}
     </div>
   )

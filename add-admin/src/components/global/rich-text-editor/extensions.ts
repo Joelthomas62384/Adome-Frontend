@@ -52,19 +52,19 @@ const taskList = TaskList.configure({
   const starterKit = StarterKit.configure({
     bulletList: {
         HTMLAttributes: {
-            class: cx("list-disc list-outside leading-3 -mt-2"),
+          class: cx("list-disc list-outside"),
         },
-    },
-    orderedList: {
+      },
+      orderedList: {
         HTMLAttributes: {
-            class: cx("list-decimal list-outside leading-3 -mt-2"),
+          class: cx("list-decimal list-outside"),
         },
-    },
-    listItem: {
+      },
+      listItem: {
         HTMLAttributes: {
-            class: cx("leading-normal -mb-2"),
+          class: cx("mt-3 leading-relaxed"),
         },
-    },
+      },
     blockquote: {
         HTMLAttributes: {
             class: cx("border-l-4 border-primary"),
