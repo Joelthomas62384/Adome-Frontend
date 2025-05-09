@@ -61,10 +61,10 @@ const UserAnalytics = (props: Props) => {
       </div> */}
     </section>
     <Separator className='mt-10' />
-    <section className='mt-8 ml-3'>
+    <section className='mt-8 ml-3 mb-16'>
 
         <h3 className='text-3xl'>User Joining Log : </h3>
-        <div className='space-y-4 mt-5'>
+        <div className='space-y-4 mt-5 max-h-96 max-w-[50%] overflow-y-auto'>
         {/* UserJoinedCard */}
          {userJoiningLog && userJoiningLog.map((user:any)=>{
                   return  <UserJoinedCard key={user?.id} userDetails={user} /> 

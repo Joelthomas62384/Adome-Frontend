@@ -122,7 +122,7 @@ const WebEditor = ({ webPageId, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        'use-automation-zoom-in h-full overflow-scroll mr-[385px] transition-all rounded-md',
+        'use-automation-zoom-in h-full overflow-y-auto overflow-x-hidden mr-[385px] transition-all rounded-md',
         {
           '!p-0 !mr-0':
             state.editor.previewMode === true || state.editor.liveMode === true,
