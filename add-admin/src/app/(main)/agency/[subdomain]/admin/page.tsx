@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CourseAnalytics from './_Dashboard/course-analytics'
 import UserAnalytics from './_Dashboard/user-analytics'
+import PaymentAnalytics from './_Dashboard/payment-analytics'
 
 
 type Props = {}
@@ -27,7 +28,9 @@ const page = (props: Props) => {
 
   <CourseAnalytics />
   </TabsContent>
-  <TabsContent value="payments">Payments</TabsContent>
+  <TabsContent value="payments">
+  <PaymentAnalytics />
+  </TabsContent>
   <TabsContent value="users">
   <UserAnalytics />
   </TabsContent>
