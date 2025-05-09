@@ -132,3 +132,11 @@ export type useAzureType = {
         onConfirm: () => void;
 };
       
+
+export type courseBought = {
+    id : string 
+    course : string
+    user : string
+    profile_pic : string
+    created_at : string
+}

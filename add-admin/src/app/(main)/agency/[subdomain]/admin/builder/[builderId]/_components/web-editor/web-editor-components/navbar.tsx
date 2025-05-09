@@ -24,7 +24,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import axiosInstance from '@/axios/public-instance'
-import { removeCookie } from 'typescript-cookie'
+import { getCookie, removeCookie } from 'typescript-cookie'
 import { logout } from '@/Redux/slices/user-details'
 
 type Props = {
@@ -57,8 +57,8 @@ const Navbar = ({ element }: Props) => {
     })
   }
 
+  const expiry = getCookie('expiry')
   const handleLogout = async () => {
-
     const response = await axiosInstance.post(`user/${schemaName}/logout`)
     if (response.status == 200) {
       removeCookie('refresh_token')
@@ -70,10 +70,10 @@ const Navbar = ({ element }: Props) => {
 
   const navItems = [
     { label: 'Home', href: '/' },
-    ...(isAdmin || user.is_staff ? [{ label: 'Admin', href: '/admin' }] : []),
+    ...(expiry && isAdmin ? [{ label: 'Admin', href: '/admin' }] : []),
     { label: 'Blog', href: '/blog' },
     { label: 'Courses', href: '/courses' },
-    { label: 'Communities', href: '/community' },
+    ...( expiry ? [{ label: 'Communities', href: '/community' }] : []),
   ]
 
   const renderNavItem = (item: { label: string; href: string }) =>
@@ -121,7 +121,7 @@ const Navbar = ({ element }: Props) => {
 
       {/* Right section */}
       <div className="flex items-center gap-2">
-        {isLoggedIn ? (
+        {expiry ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="cursor-pointer">

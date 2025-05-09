@@ -51,7 +51,7 @@ const Navbar = () => {
     ...(isAdmin || user.is_staff ? [{ label: 'Admin', href: '/admin' }] : []),
     { label: 'Blog', href: '/blog' },
     { label: 'Courses', href: '/courses' },
-    { label: 'Communities', href: '/community' },
+  ...( expiry ? [{ label: 'Communities', href: '/community' }] : []),
   ]
 
   return (

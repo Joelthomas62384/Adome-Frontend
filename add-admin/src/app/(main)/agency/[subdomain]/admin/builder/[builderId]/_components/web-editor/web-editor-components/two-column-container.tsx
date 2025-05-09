@@ -184,6 +184,7 @@ const TwoColumns = (props: Props) => {
   
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
+    e.stopPropagation()
   }
   const handleDragStart = (e: React.DragEvent, type: string) => {
     if (type === '__body') return

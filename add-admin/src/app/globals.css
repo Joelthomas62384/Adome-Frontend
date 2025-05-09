@@ -55,6 +55,11 @@ html {
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --chart-1: 221.2 83.2% 53.3%;
+    --chart-2: 212 95% 68%;
+    --chart-3: 216 92% 60%;
+    --chart-4: 210 98% 78%;
+    --chart-5: 212 97% 87%;
   }
 
   .dark {
@@ -93,6 +98,11 @@ html {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --chart-1: 221.2 83.2% 53.3%;
+    --chart-2: 212 95% 68%;
+    --chart-3: 216 92% 60%;
+    --chart-4: 210 98% 78%;
+    --chart-5: 212 97% 87%;
   }
 }
 
@@ -100,18 +110,17 @@ html {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
 .radial {
-  background-image: radial-gradient(
-    ellipse farthest-side,
-    white,
-    #716768,
-    black
-  );
+  background-image: radial-gradient(ellipse farthest-side,
+      white,
+      #716768,
+      black);
   background-size: 100% 90%;
   background-repeat: no-repeat;
 }
@@ -123,21 +132,17 @@ html {
 }
 
 .text-radial {
-  background-image: radial-gradient(
-    ellipse farthest-side,
-    rgba(113, 103, 104, 0.2) 30%,
-    black 70%
-  );
+  background-image: radial-gradient(ellipse farthest-side,
+      rgba(113, 103, 104, 0.2) 30%,
+      black 70%);
   background-size: 100% 50%;
   background-repeat: no-repeat;
 }
 
 .text-radial--circle {
-  background-image: radial-gradient(
-    circle farthest-side,
-    rgba(113, 103, 104, 0.35) 20%,
-    black 70%
-  );
+  background-image: radial-gradient(circle farthest-side,
+      rgba(113, 103, 104, 0.35) 20%,
+      black 70%);
   background-size: 50% 70%;
   background-repeat: no-repeat;
   background-position: top center;
@@ -155,11 +160,9 @@ html {
 
 @media only screen and (max-width: 800px) {
   .text-radial--circle {
-    background-image: radial-gradient(
-      circle farthest-side,
-      rgba(113, 103, 104, 0.2) 20%,
-      black 70%
-    );
+    background-image: radial-gradient(circle farthest-side,
+        rgba(113, 103, 104, 0.2) 20%,
+        black 70%);
     background-size: 100% 50%;
     background-repeat: no-repeat;
     background-position: top center;
@@ -175,76 +178,64 @@ html {
 }
 
 .img--overlay {
-  background-image: -webkit-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 1)
-  ); /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
-  background-image: -moz-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 1)
-  ); /* For Firefox (3.6 to 15) */
-  background-image: -o-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 1)
-  ); /* For old Opera (11.1 to 12.0) */
-  background-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 1)
-  ); /* Standard syntax; must be last */
+  background-image: -webkit-linear-gradient(to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1));
+  /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
+  background-image: -moz-linear-gradient(to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1));
+  /* For Firefox (3.6 to 15) */
+  background-image: -o-linear-gradient(to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1));
+  /* For old Opera (11.1 to 12.0) */
+  background-image: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1));
+  /* Standard syntax; must be last */
 }
 
 .slider-overlay {
-  background-image: -webkit-linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1),
-    rgba(0, 0, 0, 0)
-  ); /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
-  background-image: -moz-linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1),
-    rgba(0, 0, 0, 0)
-  ); /* For Firefox (3.6 to 15) */
-  background-image: -o-linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1),
-    rgba(0, 0, 0, 0)
-  ); /* For old Opera (11.1 to 12.0) */
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1),
-    rgba(0, 0, 0, 0)
-  ); /* Standard syntax; must be last */
+  background-image: -webkit-linear-gradient(to right,
+      rgba(0, 0, 0, 1),
+      rgba(0, 0, 0, 0));
+  /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
+  background-image: -moz-linear-gradient(to right,
+      rgba(0, 0, 0, 1),
+      rgba(0, 0, 0, 0));
+  /* For Firefox (3.6 to 15) */
+  background-image: -o-linear-gradient(to right,
+      rgba(0, 0, 0, 1),
+      rgba(0, 0, 0, 0));
+  /* For old Opera (11.1 to 12.0) */
+  background-image: linear-gradient(to right,
+      rgba(0, 0, 0, 1),
+      rgba(0, 0, 0, 0));
+  /* Standard syntax; must be last */
 }
 
 .slider-overlay-rev {
-  background-image: -webkit-linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 1)
-  ); /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
-  background-image: -moz-linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 1)
-  ); /* For Firefox (3.6 to 15) */
-  background-image: -o-linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 1)
-  ); /* For old Opera (11.1 to 12.0) */
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 1)
-  ); /* Standard syntax; must be last */
+  background-image: -webkit-linear-gradient(to right,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 1));
+  /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
+  background-image: -moz-linear-gradient(to right,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 1));
+  /* For Firefox (3.6 to 15) */
+  background-image: -o-linear-gradient(to right,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 1));
+  /* For old Opera (11.1 to 12.0) */
+  background-image: linear-gradient(to right,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 1));
+  /* Standard syntax; must be last */
 }
 
 .tiptap p.is-editor-empty:first-child::before {
@@ -261,6 +252,7 @@ html {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -269,7 +261,8 @@ html {
 
 /* globals.css */
 #nprogress .bar {
-  background: #B4B0AE !important; /* Change this to any color */
+  background: #B4B0AE !important;
+  /* Change this to any color */
 }
 
 #nprogress .peg {
@@ -284,9 +277,10 @@ html {
 
 * {
   outline: none !important;
-  scroll-behavior:  smooth;
+  scroll-behavior: smooth;
 
 }
+
 /* 
 .novel-editor:focus {
   outline: none !important;
@@ -298,5 +292,3 @@ html {
   outline: none !important;
   box-shadow: none !important;
 }
-
-
