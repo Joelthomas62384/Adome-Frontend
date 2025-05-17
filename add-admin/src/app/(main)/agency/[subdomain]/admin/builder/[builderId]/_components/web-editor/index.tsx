@@ -11,6 +11,7 @@ import { RootState } from '@/Redux/store'
 import { useQuery } from '@tanstack/react-query'
 import axiosInstance from '@/axios/public-instance'
 import { Spinner } from '@/app/components/ui/spinner'
+import Navbar from '@/components/navbar'
 
 type Props = {
   webPageId: string
@@ -143,7 +144,9 @@ const WebEditor = ({ webPageId, liveMode }: Props) => {
           <EyeOff />
         </Button>
       )}
-
+      {/* {state.editor.elements?.length < 1 && (
+        <Navbar />
+      )} */}
       {state.editor.elements?.length > 0 &&
         state.editor.elements.map((childElement) => (
           <Recursive key={childElement.id} element={childElement} />

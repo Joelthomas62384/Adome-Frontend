@@ -7,6 +7,8 @@ import { useQuery } from '@tanstack/react-query'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import WebEditor from './admin/builder/[builderId]/_components/web-editor'
+import Navbar from '@/components/navbar'
+import NavbarClone from '@/components/navbar/nav-clone'
 
 type Props = {}
 
@@ -27,11 +29,14 @@ const page = (props: Props) => {
   
   
   useEffect(() => {
-   console.log(data)
-  }, [data])
+   console.log(isError)
+  }, [isError])
   
   return (
     <div className="h-screen overflow-hidden">
+      {isError && (
+        <NavbarClone />
+      )}
     {data && (
       <EditorProvider  webId={data.id} pageDetails={data.web_data}>
         <WebEditor webPageId={data.id} liveMode={true} />

@@ -39,25 +39,15 @@ export const prices = [
   }
 ]
 
-export const getSubdomain = async () => {
+export const getSubdomain = (): string => {
   if (typeof window !== "undefined") {
-      const hostname = window.location.host; 
-      // const parts = hostname.split(".");
+      const hostname = window.location.hostname; 
+      const parts = hostname.split(".");
 
-      // const localhostIndex = parts.indexOf("localhost");
-      // if (localhostIndex > 0) {
-      //     return parts.slice(0, localhostIndex).join("."); 
-      // }
-      const response = await axiosInstance.post(`tenant/public/get-schema`,{
-        
-        domain : hostname
-      })
-      console.log(response)
-      if(response.status==200){
-
-        return response.data.schemaName
+      const localhostIndex = parts.indexOf("localhost");
+      if (localhostIndex > 0) {
+          return parts.slice(0, localhostIndex).join("."); 
       }
-      
   }
   return "public"; 
 };

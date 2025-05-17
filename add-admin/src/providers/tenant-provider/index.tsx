@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 const fetchTenant = async () => {
-  const response = await axiosInstance.get(`tenant/${await getSubdomain()}/metadata`);
+  const response = await axiosInstance.get(`tenant/${getSubdomain()}/metadata`);
   return response.data;
 };
 
@@ -19,7 +19,7 @@ const TenantProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   const { data: tenant, isLoading, isError } = useQuery({
-    queryKey: ["tenant" ],
+    queryKey: ["tenant" , getSubdomain()],
     queryFn: fetchTenant,
     retry: false,
   });

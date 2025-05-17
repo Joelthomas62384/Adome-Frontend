@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import axiosInstance from "@/axios/public-instance"
 import { useSelector } from "react-redux"
 import { RootState } from "@/Redux/store"
+import { v4 } from "uuid"
 
 export type DeviceTypes = 'Desktop' | 'Mobile' | 'Tablet'
 
@@ -46,11 +47,23 @@ export type EditorState = {
 const initialEditorState: EditorState['editor'] = {
     elements: [
         {
-            content: [],
+            content: [
+                {
+                    content: {
+
+                    },
+                    id: v4(),
+                    name: 'navbar',
+                    styles: {
+
+                    },
+                    type: 'navbar',
+                }
+            ],
             id: '__body',
             name: 'Body',
             styles: {
-               
+
                 // paddingBottom: '600px',
                 // padding: initialEditorState.liveMode && 0,
                 // margin: 0
@@ -220,7 +233,7 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
             }
             const updatedHistoryAfterDelete = [
                 ...state.history.history.slice(0, state.history.currentIndex + 1),
-                { ...updatedEditorStateAfterDelete }, 
+                { ...updatedEditorStateAfterDelete },
             ]
 
             const deletedState = {
@@ -279,7 +292,7 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
                                 styles: {
                                     ...element.styles,
                                     padding: !state.editor.previewMode ? 0 : undefined,
-                                    paddingBottom : state.editor.previewMode ? "600px" : undefined
+                                    paddingBottom: state.editor.previewMode ? "600px" : undefined
                                 },
                             }
                             : element
@@ -288,31 +301,31 @@ const editorReducer = (state: EditorState = initialState, action: EditorAction):
             };
 
 
-            case "TOGGLE_LIVE_MODE": {
-                const newLiveMode = action.payload
-                    ? action.payload.value
-                    : !state.editor.liveMode;
-            
-                return {
-                    ...state,
-                    editor: {
-                        ...state.editor,
-                        liveMode: newLiveMode,
-                        elements: state.editor.elements.map((element) =>
-                            element.id === "__body"
-                                ? {
-                                      ...element,
-                                      styles: {
-                                          ...element.styles,
-                                          padding: newLiveMode ? 0 : '5px',
-                                      },
-                                  }
-                                : element
-                        ),
-                    },
-                };
-            }
-            
+        case "TOGGLE_LIVE_MODE": {
+            const newLiveMode = action.payload
+                ? action.payload.value
+                : !state.editor.liveMode;
+
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    liveMode: newLiveMode,
+                    elements: state.editor.elements.map((element) =>
+                        element.id === "__body"
+                            ? {
+                                ...element,
+                                styles: {
+                                    ...element.styles,
+                                    padding: newLiveMode ? 0 : '5px',
+                                },
+                            }
+                            : element
+                    ),
+                },
+            };
+        }
+
 
         case "REDO":
             if (state.history.currentIndex < state.history.history.length - 1) {

@@ -129,7 +129,7 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
         handleOpen,
         setOnConfirm,
     } = useAzure();
-    const {schemaName} = useSelector((state:RootState)=>state.app)
+    const {schemaName,tenant} = useSelector((state:RootState)=>state.app)
 
 
     const queryClient = useQueryClient();
@@ -331,7 +331,7 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <PermissionEditor rowData={rowData} setOpen={setOpen} open={open} setStaffData={setStaffData} staffData={staffData} updateUserMutation={updateUserMutation} />
+            <PermissionEditor rowData={rowData} setOpen={setOpen} open={open} setStaffData={setStaffData} staffData={staffData} updateUserMutation={updateUserMutation} subscription={tenant.subscription_plan  || '1'}/>
             {/* <Assure open={!!banBlock} handleOpen={() => setBanBlock("")} description={banBlock === "block" ? "This action will block the user. User will be completely prohibited from the page." : "This action will ban the user, they will only be able to access things for which they have paid."} onConfirm={() => { banBlock === "block" ? blockMutation.mutate() : banMutation.mutate(); }} /> */}
         </>
     );

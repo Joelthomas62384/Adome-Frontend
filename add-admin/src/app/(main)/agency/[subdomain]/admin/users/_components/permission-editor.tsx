@@ -1,3 +1,5 @@
+// "use client"
+
 import React from 'react'
 import {
     Dialog,
@@ -12,6 +14,8 @@ import { Button } from '@/components/ui/button'
 import { staffPermission, UsersType } from '@/types'
 import { Input } from '@/components/ui/input'
 import { UseMutationResult } from '@tanstack/react-query'
+// import { useSelector } from 'react-redux'
+import { RootState } from '@/Redux/store'
 
 type Props = {
     rowData: UsersType;
@@ -20,9 +24,11 @@ type Props = {
     open: boolean;
     setStaffData: (value: staffPermission | ((prev: staffPermission) => staffPermission)) => void;
     updateUserMutation: UseMutationResult<any, Error, staffPermission, unknown>;
+    subscription: string
 };
 
-const PermissionEditor = ({ rowData, setOpen, staffData, open, setStaffData, updateUserMutation }: Props) => {
+const PermissionEditor = ({ rowData, setOpen, staffData, open, setStaffData, updateUserMutation, subscription }: Props) => {
+    // const {tenant} = useSelector((state:RootState)=>state.app)
     return (
         <Dialog open={open} onOpenChange={() => setOpen(!open)}>
             <DialogContent className="bg-themeBlack max-w-lg">
@@ -77,21 +83,27 @@ const PermissionEditor = ({ rowData, setOpen, staffData, open, setStaffData, upd
                                     ["hasCoursesPermission", "Courses Controller"],
                                     ["hasBuilderPermission", "Builder Controller"],
                                 ] as const
-                            ).map(([key, label]) => (
-                                <div key={key} className="flex items-center justify-between">
-                                    <Label className="text-white">{label}</Label>
-                                    <Switch
-                                        checked={Boolean(staffData[key as keyof staffPermission])}
-                                        onCheckedChange={(checked) =>
-                                            setStaffData((prev) => ({
-                                                ...prev,
-                                                [key as keyof staffPermission]: checked,
-                                            }))
-                                        }
-                                    />
+                            )
+                                .filter(([key]) =>
+                                    subscription === '1'
+                                        ? key === 'hasStaffPermission' || key === 'hasBlogPermission'
+                                        : true
+                                )
+                                .map(([key, label]) => (
+                                    <div key={key} className="flex items-center justify-between">
+                                        <Label className="text-white">{label}</Label>
+                                        <Switch
+                                            checked={Boolean(staffData[key as keyof staffPermission])}
+                                            onCheckedChange={(checked) =>
+                                                setStaffData((prev) => ({
+                                                    ...prev,
+                                                    [key as keyof staffPermission]: checked,
+                                                }))
+                                            }
+                                        />
 
-                                </div>
-                            ))}
+                                    </div>
+                                ))}
                         </div>
                     )}
 
