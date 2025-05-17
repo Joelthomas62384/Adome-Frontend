@@ -26,7 +26,7 @@ const PaymentCard = ({paymentDetails}: Props) => {
       <p className="text-xl font-medium ">
         {paymentDetails.user}{" has "}
         <span className="font-normal">
-        Joined at  {new Date(paymentDetails?.order_date).toLocaleDateString("en-US", {
+        has payed ₹{paymentDetails.order_amount} at  {new Date(paymentDetails?.order_date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",

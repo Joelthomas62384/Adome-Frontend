@@ -18,6 +18,7 @@ import { RootState } from '@/Redux/store';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { v4 } from 'uuid';
+import withSubscriptionCheck from '@/HOC/subscription-check';
 type Props = {
   params: Promise<{ chapterId: string  , moduleId : string}>;
 }
@@ -118,4 +119,4 @@ const page = (props: Props) => {
   )
 }
 
-export default page
+export default withSubscriptionCheck(React.memo(page));

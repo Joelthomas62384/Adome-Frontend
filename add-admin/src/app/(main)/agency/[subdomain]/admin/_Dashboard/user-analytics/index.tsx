@@ -66,6 +66,9 @@ const UserAnalytics = (props: Props) => {
         <h3 className='text-3xl'>User Joining Log : </h3>
         <div className='space-y-4 mt-5 max-h-96 max-w-[50%] overflow-y-auto'>
         {/* UserJoinedCard */}
+        {userJoiningLog && userJoiningLog.length < 1  && (
+            "No data available"
+        )}
          {userJoiningLog && userJoiningLog.map((user:any)=>{
                   return  <UserJoinedCard key={user?.id} userDetails={user} /> 
                 })}

@@ -6,6 +6,7 @@ import axiosInstance from '@/axios/public-instance'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
 import ChapterCard from './_components/chapter-card'
+import withSubscriptionCheck from '@/HOC/subscription-check'
 
 type Props = {
   params: Promise<{ moduleId: string }>;
@@ -48,4 +49,5 @@ const page = ({ params }: Props) => {
   )
 }
 
-export default page
+export default withSubscriptionCheck(React.memo(page));
+

@@ -30,6 +30,8 @@ import { useToast } from "@/hooks/use-toast";
 import PermissionEditor from "./permission-editor";
 import { useAzure } from "@/providers/assure-provider";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
 
 
 
@@ -127,6 +129,7 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
         handleOpen,
         setOnConfirm,
     } = useAzure();
+    const {schemaName} = useSelector((state:RootState)=>state.app)
 
 
     const queryClient = useQueryClient();
@@ -177,12 +180,12 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
 
 
     const banUser = async () => {
-        const { data } = await axiosInstance.post(`user/${getSubdomain()}/ban/${rowData.user.username}`);
+        const { data } = await axiosInstance.post(`user/${schemaName}/ban/${rowData.user.username}`);
         return data;
     };
 
     const blockUser = async () => {
-        const { data } = await axiosInstance.post(`user/${getSubdomain()}/block/${rowData.user.username}`);
+        const { data } = await axiosInstance.post(`user/${schemaName}/block/${rowData.user.username}`);
         return data;
     };
 
@@ -256,7 +259,7 @@ const CallToAction: React.FC<Props> = ({ rowData }) => {
     });
 
     const makeStaff = async (newStatus: staffPermission) => {
-        return axiosInstance.patch(`user/${getSubdomain()}/tenantuser/${rowData.user.username}`, newStatus);
+        return axiosInstance.patch(`user/${schemaName}/tenantuser/${rowData.user.username}`, newStatus);
     };
 
     const updateUserMutation = useMutation({

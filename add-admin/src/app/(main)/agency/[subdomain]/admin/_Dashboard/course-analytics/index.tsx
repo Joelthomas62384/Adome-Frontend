@@ -64,9 +64,13 @@ const CourseAnalytics = (props: Props) => {
 
         <h3 className='text-3xl'>Course Sales : </h3>
         <div className='space-y-4 mt-5'>
+        {courseBought && courseBought.length < 1  && (
+            "No data available"
+        )}
         {courseBought && courseBought.map((course:courseBought)=>{
           return  <CourseBoughtCard key={course.id} courseDetails={course} /> 
         })}
+
         </div>
         {/**/}
     </section>

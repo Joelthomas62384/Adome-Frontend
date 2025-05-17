@@ -15,25 +15,25 @@ import { getCookie, setCookie } from 'typescript-cookie'
 type Props = {}
 
 
-const getSubdomain = (): string => {
-  if (typeof window !== "undefined") {
-      const hostname = window.location.hostname; 
-      const parts = hostname.split(".");
+// const getSubdomain = (): string => {
+//   if (typeof window !== "undefined") {
+//       const hostname = window.location.hostname; 
+//       const parts = hostname.split(".");
 
-      if (hostname.includes("localhost")) {
-          if (parts.length > 2) {
-              return parts[0]; // Extract first part before "localhost"
-          }
-          return "public"; // Default subdomain
-      }
+//       if (hostname.includes("localhost")) {
+//           if (parts.length > 2) {
+//               return parts[0]; // Extract first part before "localhost"
+//           }
+//           return "public"; // Default subdomain
+//       }
 
-      // Handle production domains (e.g., sub.domain.com)
-      if (parts.length > 2) {
-          return parts[0]; // Extract subdomain
-      }
-  }
-  return "public"; 
-};
+//       // Handle production domains (e.g., sub.domain.com)
+//       if (parts.length > 2) {
+//           return parts[0]; // Extract subdomain
+//       }
+//   }
+//   return "public"; 
+// };
 
   
 const Page = (props: Props) => {

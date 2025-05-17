@@ -4,10 +4,11 @@ import axiosInstance from "@/axios/public-instance";
 import LoadingPage from "@/components/global/loading-page";
 import { getSubdomain } from "@/constants";
 import { setUserData } from "@/Redux/slices/user-details";
+import { RootState } from "@/Redux/store";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCookie } from "typescript-cookie";
 
 type Props = {
@@ -15,9 +16,10 @@ type Props = {
 };
 
 const fetchTenantUser = async () => {
+  const {schemaName} = useSelector((state:RootState)=>state.app)
 try{
 
-  const response = await axiosInstance.get(`user/${getSubdomain()}/tenantuser`);
+  const response = await axiosInstance.get(`user/${schemaName}/tenantuser`);
   console.log(response)
   if(response.data){
     return response.data;

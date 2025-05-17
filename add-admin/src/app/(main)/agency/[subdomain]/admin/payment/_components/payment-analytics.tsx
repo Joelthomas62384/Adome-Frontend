@@ -5,15 +5,17 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
 import axiosInstance from '@/axios/public-instance'
 import { Separator } from '@/components/ui/separator'
-import WalletDisplayCard from './_components/wallet-display-card'
-import SixMonthLine from './_components/six-month-line'
-import SevenDayLine from './_components/seven-day-line copy'
-import PaymentCard from './_components/payments-card'
+import WalletDisplayCard from '../../_Dashboard/payment-analytics/_components/wallet-display-card'
+import PaymentCard from '../../_Dashboard/payment-analytics/_components/payments-card'
+import WalletDisplayCardPayment from './wallet-display-card'
+// import WalletDisplayCard from './_components/wallet-display-card'
+
+// import PaymentCard from './_components/payments-card'
 
 
 type Props = {}
 
-const PaymentAnalytics = (props: Props) => {
+const PaymentAnalyticsPayment = (props: Props) => {
   const {schemaName} = useSelector((state:RootState)=>state.app)
   const {data : walletData , isLoading : walletLoading , isError : walletError} = useQuery({
     queryKey : ['get-wallet'],
@@ -24,30 +26,6 @@ const PaymentAnalytics = (props: Props) => {
     }
   })
 
-
-
-  const {data : sixMonthData , isLoading : sixMonthLoading , isError : sixMonthError} = useQuery({
-    queryKey : ['get-six-month-data'],
-    queryFn : async ()=>{
-        const response = await axiosInstance.get(`payment/${schemaName}/six-months-analytics`)
-        console.log(response.data)
-        return response.data
-    }
-  })
-
-
-
-
-
-  
-  const {data : sevenDayData , isLoading : sevenDayLoading , isError : sevenDayError} = useQuery({
-    queryKey : ['get-sevend-day-data'],
-    queryFn : async ()=>{
-        const response = await axiosInstance.get(`payment/${schemaName}/seven-day-analytics`)
-        console.log(response.data)
-        return response.data
-    }
-  })
 
 
 
@@ -71,18 +49,13 @@ const PaymentAnalytics = (props: Props) => {
 
     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center">
       <div className="w-full max-w-xxl">
-      <WalletDisplayCard data={{amount : walletData?.total_amount,text : "Total Amout"}} />
+      <WalletDisplayCardPayment data={{amount : walletData?.total_amount,text : "Total Amout"}} />
       </div>
       <div className="w-full max-w-xxl">
-      <WalletDisplayCard data={{amount : walletData?.withdrawal_amount,text : "Withdrawable Amout"}} />
+      <WalletDisplayCardPayment data={{amount : walletData?.withdrawal_amount,text : "Withdrawable Amout"}} />
         {/* <UserLine datas={userSixMonths} /> */}
       </div>
-      <div className="w-full max-w-xxl">
-        <SixMonthLine datas={sixMonthData} />
-      </div>
-      <div className="w-full max-w-xxl">
-      <SevenDayLine datas={sevenDayData} />
-      </div>
+     
     </section>
     <Separator className='mt-10' />
     <section className='mt-8 ml-3 mb-16'>
@@ -90,9 +63,6 @@ const PaymentAnalytics = (props: Props) => {
         <h3 className='text-3xl'>Order Placed Log : </h3>
         <div className='space-y-4 mt-5 max-h-96 max-w-[50%] overflow-y-auto'>
         {/* UserJoinedCard */}
-        {previousOrderLogs && previousOrderLogs.length < 1  && (
-            "No data available"
-        )}
          {
             previousOrderLogs && previousOrderLogs.map((order:any)=>(
                 <PaymentCard key={order.id} paymentDetails={order} />
@@ -105,4 +75,4 @@ const PaymentAnalytics = (props: Props) => {
   )
 }
 
-export default PaymentAnalytics
+export default PaymentAnalyticsPayment

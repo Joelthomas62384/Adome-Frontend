@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useCallback } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {  useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import GradientText from "@/components/global/gradiant-text";
 import CourseCard from "@/components/Course/course-card";
@@ -11,11 +11,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
 import { useRouter } from "next/navigation";
 import { loadRazorpay } from "@/constants";
+import withSubscriptionCheck from "@/HOC/subscription-check";
 
 const PAGE_LIMIT = 6;
 
 const Page = () => {
   const router = useRouter();
+  const queryClient = useQueryClient()
   const { schemaName } = useSelector((state: RootState) => state.app);
   const res = loadRazorpay()
   if(!res){
@@ -64,9 +66,22 @@ const Page = () => {
     [isFetchingNextPage, hasNextPage, fetchNextPage]
   );
 
-  const handleOnClick = (id:number)=>{
-
-  }
+  const handleOnClick = (id: number) => {
+    queryClient.setQueryData(["courses"], (oldData: any) => {
+      if (!oldData) return oldData;
+  
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page: any) => ({
+          ...page,
+          courses: page.courses.map((course: any) =>
+            course.id === id ? { ...course, owned: true } : course
+          ),
+        })),
+      };
+    });
+  };
+  
   return (
     <div className="flex flex-col items-center p-6">
       <GradientText
@@ -126,4 +141,5 @@ const Page = () => {
   );
 };
 
-export default Page;
+// export default Page;
+export default withSubscriptionCheck(React.memo(Page));

@@ -23,7 +23,8 @@ export const prices = [
       "Unlimited Blogs",
       "Subdomain",
       "24/7 support"
-    ]
+    ],
+    plan_type : "1"
   },
   {
     price : 5000,
@@ -33,19 +34,30 @@ export const prices = [
       "Unlimited Courses",
       "Custom Domain",
       "24/7 Premium support"
-    ]
+    ],
+    plan_type : "2"
   }
 ]
 
-export const getSubdomain = (): string => {
+export const getSubdomain = async () => {
   if (typeof window !== "undefined") {
-      const hostname = window.location.hostname; 
-      const parts = hostname.split(".");
+      const hostname = window.location.host; 
+      // const parts = hostname.split(".");
 
-      const localhostIndex = parts.indexOf("localhost");
-      if (localhostIndex > 0) {
-          return parts.slice(0, localhostIndex).join("."); 
+      // const localhostIndex = parts.indexOf("localhost");
+      // if (localhostIndex > 0) {
+      //     return parts.slice(0, localhostIndex).join("."); 
+      // }
+      const response = await axiosInstance.post(`tenant/public/get-schema`,{
+        
+        domain : hostname
+      })
+      console.log(response)
+      if(response.status==200){
+
+        return response.data.schemaName
       }
+      
   }
   return "public"; 
 };

@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import debounce from 'lodash/debounce';
 import { Spinner } from '@/app/components/ui/spinner';
+import withSubscriptionCheck from '@/HOC/subscription-check';
 
 interface Community {
   id: number;
@@ -27,7 +28,7 @@ interface Message {
   content?: string;
 }
 
-const MessagingPage: React.FC = () => {
+const Page: React.FC = () => {
   const ws = useRef<WebSocket | null>(null);
   const { schemaName } = useSelector((state: RootState) => state.app);
   const hasScrolledInitially = useRef(false);
@@ -250,7 +251,7 @@ const MessagingPage: React.FC = () => {
           )}
         </div>
 
-        <div className="p-4 border-t border-border bg-card">
+       {communities && communities.length > 0 && ( <div className="p-4 border-t border-border bg-card">
           <form onSubmit={handleSendMessage} className="flex items-center">
             <input
               type="text"
@@ -266,10 +267,10 @@ const MessagingPage: React.FC = () => {
               Send
             </button>
           </form>
-        </div>
+        </div>)}
       </div>
     </div>
   );
 };
 
-export default MessagingPage;
+export default withSubscriptionCheck(React.memo(Page));

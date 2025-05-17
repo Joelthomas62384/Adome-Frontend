@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { DeviceTypes, useEditor } from '@/providers/editor/editor-provider'
 import { RootState } from '@/Redux/store'
+import { useMutation } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { ArrowLeftCircle, EyeIcon, Laptop, Redo2, Smartphone, SmartphoneIcon, Tablet, TabletIcon, Undo2 } from 'lucide-react'
 import Link from 'next/link'
@@ -95,6 +96,10 @@ const WebEditorNavigation = ({webId , pageDetails}: Props) => {
 
         
       }
+
+      const updateMutation = useMutation({
+        mutationKey : ['update-website']
+      })
     
 
   return (

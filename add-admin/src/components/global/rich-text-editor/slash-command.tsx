@@ -2,15 +2,18 @@
 
 import axiosInstance from "@/axios/public-instance"
 import { getSubdomain } from "@/constants"
+import { store } from "@/Redux/store"
 import { CheckSquare, Code, Heading1, Heading2, Heading3, ImageIcon, List, ListOrdered, MessageSquarePlus, Text, TextQuote, Video } from "lucide-react"
 import { Command, createSuggestionItems, renderItems } from "novel"
 
 
 const uploadFile = async (file:any)=>{
+  const state = store.getState()
+  const {schemaName} = state.app
   const formData = new FormData()
   formData.append('file' , file)
   formData.append('content_type' , 'blog')
-  const {data} = await axiosInstance.post(`mediamanager/${getSubdomain()}/upload`, formData)
+  const {data} = await axiosInstance.post(`mediamanager/${schemaName}/upload`, formData)
   console.log(data)
   
   return data.file

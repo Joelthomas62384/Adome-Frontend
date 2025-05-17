@@ -48,10 +48,10 @@ const Navbar = () => {
 
   const navItems = [
     { label: 'Home', href: '/' },
-    ...(isAdmin || user.is_staff ? [{ label: 'Admin', href: '/admin' }] : []),
+    ...(expiry && isAdmin ? [{ label: 'Admin', href: '/admin' }] : []),
     { label: 'Blog', href: '/blog' },
-    { label: 'Courses', href: '/courses' },
-  ...( expiry ? [{ label: 'Communities', href: '/community' }] : []),
+    ...((expiry && tenant.subscription_plan === '2') ? [{ label: 'Communities', href: '/community' }] : []),
+    ...((tenant.subscription_plan === '2') ? [{ label: 'Course', href: '/courses' }] : []),
   ]
 
   return (
@@ -84,14 +84,14 @@ const Navbar = () => {
                 {user.user.full_name}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={()=>{
+              {tenant.subscription_plan === '2' && <DropdownMenuItem
+                onClick={() => {
                   router.push('/my-courses')
                 }}
                 className="font-medium cursor-pointer"
               >
                 My Courses
-              </DropdownMenuItem>
+              </DropdownMenuItem>}
               <DropdownMenuItem
                 onClick={handleLogout}
                 className="font-medium cursor-pointer"

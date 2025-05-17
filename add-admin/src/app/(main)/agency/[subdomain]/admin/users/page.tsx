@@ -2,7 +2,7 @@
 
 import axiosInstance from "@/axios/public-instance";
 import DataTable from "@/app/(main)/agency/[subdomain]/admin/users/_components/data-table";
-import { getSubdomain } from "@/constants";
+// import { getSubdomain } from "@/constants";
 import { columns } from "./_components/columns";
 import { useRef, useCallback, useState,  useTransition } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
 
 const Page = () => {
   const [selectStaff, setSelectStaff] = useState("user");
@@ -29,10 +31,11 @@ const Page = () => {
       setDebouncedSearch(e.target.value);
     });
   };
+  const {schemaName} = useSelector((state:RootState)=>state.app)
 
   const fetchUsers = async ({ pageParam = 1 }) => {
     const response = await axiosInstance.get(
-      `user/${getSubdomain()}/tenantusers`,
+      `user/${schemaName}/tenantusers`,
       {
         params: {
           page: pageParam,

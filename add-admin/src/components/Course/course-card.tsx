@@ -17,6 +17,7 @@ import { loadRazorpay } from "@/constants";
 import axiosInstance from "@/axios/public-instance";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   title: string;
@@ -51,7 +52,7 @@ const CourseCards = ({
   //   alert("Razorpay SDK failed to load");
   //   return;
   // }
-
+  const queryClient = useQueryClient()
   const handlePayment = async ()=>{
     const response = await axiosInstance.post(`payment/${schemaName}/create-order` , {
       course_id : id
@@ -66,11 +67,14 @@ const CourseCards = ({
       order_id: razorpay_order_id,
       handler: async function (response: any) {
         // TODO: Step 3 - verify on server
-        await axiosInstance.post(`payment/${schemaName}/verify-order`, {
+      const serverResponse =   await axiosInstance.post(`payment/${schemaName}/verify-order`, {
           razorpay_order_id: response.razorpay_order_id,
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_signature: response.razorpay_signature,
         });
+        console.log(serverResponse)
+        onClick(id);
+
 
         alert("Payment successful!");
       },

@@ -26,6 +26,7 @@ import {
 import axiosInstance from '@/axios/public-instance'
 import { getCookie, removeCookie } from 'typescript-cookie'
 import { logout } from '@/Redux/slices/user-details'
+import { useRouter } from 'next/navigation'
 
 type Props = {
   element: EditorElement
@@ -33,6 +34,7 @@ type Props = {
 
 const Navbar = ({ element }: Props) => {
   const { dispatch, state } = useEditor()
+  const router = useRouter()
   const styles = element.styles
 
   const { tenant, schemaName } = useSelector((state: RootState) => state.app)
@@ -72,8 +74,9 @@ const Navbar = ({ element }: Props) => {
     { label: 'Home', href: '/' },
     ...(expiry && isAdmin ? [{ label: 'Admin', href: '/admin' }] : []),
     { label: 'Blog', href: '/blog' },
-    { label: 'Courses', href: '/courses' },
-    ...( expiry ? [{ label: 'Communities', href: '/community' }] : []),
+    // { label: 'Courses', href: '/courses' },
+    ...(( expiry && tenant.subscription_plan==='2')? [{ label: 'Communities', href: '/community' }] : []),
+    ...((  tenant.subscription_plan==='2')? [{ label: 'Course', href: '/courses' }] : []),
   ]
 
   const renderNavItem = (item: { label: string; href: string }) =>
@@ -121,19 +124,27 @@ const Navbar = ({ element }: Props) => {
 
       {/* Right section */}
       <div className="flex items-center gap-2">
-        {expiry ? (
-          <DropdownMenu>
+      {expiry ? (
+          <DropdownMenu >
             <DropdownMenuTrigger asChild>
               <Avatar className="cursor-pointer">
                 <AvatarImage src={user.user.profile_pic} alt={user.user.full_name} />
                 <AvatarFallback>{user.user.full_name?.[0]}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-themeBlack" align="end">
+            <DropdownMenuContent className="w-56 bg-themeBlack relative z-[1000]" align="end">
               <DropdownMenuLabel className="truncate max-w-full">
                 {user.user.full_name}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+             {tenant.subscription_plan  === '2' && <DropdownMenuItem
+                onClick={()=>{
+                  router.push('/my-courses')
+                }}
+                className="font-medium cursor-pointer"
+              >
+                My Courses
+              </DropdownMenuItem>}
               <DropdownMenuItem
                 onClick={handleLogout}
                 className="font-medium cursor-pointer"
@@ -142,7 +153,7 @@ const Navbar = ({ element }: Props) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
+        )  : (
           <Link href="/login" passHref>
             <Button
               variant="outline"

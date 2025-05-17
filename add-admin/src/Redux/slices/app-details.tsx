@@ -28,7 +28,7 @@ const initialState: initialStateType = {
         subdomain: "",
         courses: false,
     },
-    _persist: { version: -1, rehydrated: false }, // Required for redux-persist
+    _persist: { version: -1, rehydrated: false },
 };
 
 const appSlice = createSlice({
@@ -44,7 +44,7 @@ const appSlice = createSlice({
                 logo: action.payload.logo,
             };
         },
-        resetAppInfo: () => initialState, // Reset state when needed
+        resetAppInfo: () => initialState, 
     },
 });
 

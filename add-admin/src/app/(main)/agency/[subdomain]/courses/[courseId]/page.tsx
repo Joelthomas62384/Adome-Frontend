@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/Redux/store';
 import axiosInstance from '@/axios/public-instance';
 import { loadRazorpay } from '@/constants';
+import withSubscriptionCheck from '@/HOC/subscription-check';
 
 type Props = {
   params : Promise< {courseId : string} >
@@ -37,6 +38,7 @@ const Page = ({params}: Props) => {
       course_id : courseId
     })
     const { razorpay_order_id, order_amount: razorpayAmount, currency, razorpay_key_id , order_id } = response.data;
+    console.log(response.data)
     const options = {
       key: razorpay_key_id,
       amount: razorpayAmount,
@@ -46,11 +48,12 @@ const Page = ({params}: Props) => {
       order_id: razorpay_order_id,
       handler: async function (response: any) {
         // TODO: Step 3 - verify on server
-        await axiosInstance.post(`payment/${schemaName}/verify-order`, {
+       const verifyresponse =  await axiosInstance.post(`payment/${schemaName}/verify-order`, {
           razorpay_order_id: response.razorpay_order_id,
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_signature: response.razorpay_signature,
         });
+        console.log(verifyresponse)
 
         alert("Payment successful!");
       },
@@ -90,4 +93,4 @@ const Page = ({params}: Props) => {
   )
 }
 
-export default Page
+export default withSubscriptionCheck(React.memo(Page));

@@ -3,6 +3,7 @@
 import axiosInstance from '@/axios/public-instance'
 import CourseCards from '@/components/Course/course-card'
 import GradientText from '@/components/global/gradiant-text'
+import withSubscriptionCheck from '@/HOC/subscription-check'
 import { RootState } from '@/Redux/store'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
@@ -64,4 +65,4 @@ const page = (props: Props) => {
   )
 }
 
-export default page
+export default withSubscriptionCheck(React.memo(page));

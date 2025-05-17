@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button'
 import axiosInstance from '@/axios/public-instance'
 import { useMutation } from '@tanstack/react-query'
-import { getSubdomain, getTwoLetters } from '@/constants'
+import {  getTwoLetters } from '@/constants'
 import { removeCookie } from 'typescript-cookie'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
@@ -47,15 +47,16 @@ const useModuleIdPath = () => {
   return courseId
 }
 const InfoBar = ({ className }: Props) => {
-  const user = useSelector((state: RootState) => state.user.user)  // Fix double `.user`
+  const user = useSelector((state: RootState) => state.user.user)  
   const [fallBackName, setFallBackName] = useState<string>('U')
+  const {schemaName} = useSelector((state:RootState)=>state.app)
   const pathName = usePathname()
   const moduleId = useModuleIdPath()
   console.log(moduleId)
   // Logout function
   const logoutMutation = useMutation({
     mutationKey: ['logout'],
-    mutationFn: async () => await axiosInstance.post(`user/${getSubdomain()}/logout`),
+    mutationFn: async () => await axiosInstance.post(`user/${schemaName}/logout`),
     onSuccess: () => {
       removeCookie('expiry')
       removeCookie('refresh_token')

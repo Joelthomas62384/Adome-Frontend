@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
 import axiosInstance from "@/axios/public-instance";
 import BlockTextEditor from "@/components/global/rich-text-editor";
+import withSubscriptionCheck from "@/HOC/subscription-check";
 
 
 
@@ -140,4 +141,4 @@ const Page = ({params}:Props) => {
   );
 };
 
-export default Page;
+export default withSubscriptionCheck(React.memo(Page));

@@ -4,7 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { AutosizeTextarea } from '@/components/ui/text-area'
 import { useComments } from '@/hooks/blog-comments'
+import { RootState } from '@/Redux/store'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 type Props = {
   userDetails: {
@@ -15,6 +17,7 @@ type Props = {
 }
 
 const CommentSection = ({ userDetails, contentId }: Props) => {
+  const {user , isLoggedIn } = useSelector((state:RootState)=>state.user)
   const [newComment, setNewComment] = useState('')
   const {
     comments,
@@ -38,13 +41,13 @@ const CommentSection = ({ userDetails, contentId }: Props) => {
       <h2 className="text-2xl font-semibold mb-6">Comments</h2>
 
       <form onSubmit={handleSubmit} className="flex items-start gap-4 mb-10">
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={userDetails?.profile_pic} />
-          <AvatarFallback>{userDetails?.full_name?.[0] ?? 'U'}</AvatarFallback>
-        </Avatar>
+       {isLoggedIn && <Avatar className="h-10 w-10">
+          <AvatarImage src={user?.user?.profile_pic} />
+          <AvatarFallback>{user?.user?.full_name?.[0] ?? 'U'}</AvatarFallback>
+        </Avatar>}
 
         <div className="flex-1 space-y-2">
-          <AutosizeTextarea
+      {  isLoggedIn ?  <AutosizeTextarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write a comment..."
@@ -52,6 +55,10 @@ const CommentSection = ({ userDetails, contentId }: Props) => {
             rows={3}
             maxHeight={200}
           />
+        :(
+          <p className='text-muted-foreground'>Login to comment</p>
+        )
+        }
 
           <div className="flex justify-end">
             <Button
@@ -65,7 +72,7 @@ const CommentSection = ({ userDetails, contentId }: Props) => {
       </form>
 
       <div className="space-y-8">
-        {comments.length < 1 && (
+        {comments.length < 1 && isLoggedIn && (
           <p className="text-muted-foreground">Be the first to comment on this amazing blog.</p>
         )}
 
