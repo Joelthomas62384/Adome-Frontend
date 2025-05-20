@@ -24,17 +24,20 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
         pathname: "/**",
-      },{
+      },
+      {
         protocol: "https",
         hostname: "plus.unsplash.com",
         pathname: "/**",
-      }
+      },
+      {
+        protocol: "http",
+        hostname: "adome.codewithjoe.in", // ✅ Add this
+        pathname: "/media/**",
+      },
     ],
-    // domains : ["source.unsplash.com","images.unsplash.com"],
   },
-  experimental: {
-   
-  },
+  experimental: {},
 };
 
 export default nextConfig;

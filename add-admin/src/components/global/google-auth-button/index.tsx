@@ -15,7 +15,7 @@ type GoogleAuthButtonProps = {
 export const GoogleAuthButton = () => {
     const {schemaName} = useSelector((state:RootState) =>state.app)
     const googleSignup = ()=>{
-        window.location.href = `http://localhost/user/${schemaName}/login`
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL }user/${schemaName}/login`
         return 
     }
 //   const { signUpWith, signInWith } = useGoogleAuth()

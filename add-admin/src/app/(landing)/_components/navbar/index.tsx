@@ -9,6 +9,7 @@ import GlassSheet from '@/components/global/glass-sheet';
 import { MenuIcon } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/Redux/store';
+import { env } from 'process';
 
 type Props = {};
 
@@ -23,7 +24,7 @@ const LandingPageNavbar = (props: Props) => {
 
 {
 
-      ( <Link href={`http://localhost/user/${schemaName}/login`} passHref>
+      ( <Link href={`${process.env.NEXT_PUBLIC_API_URL }user/${schemaName}/login`} passHref>
         <Button
           variant={'outline'}
           className="bg-themeBlack rounded-2xl flex  gap-2 border-themeGray hover:bg-themeGray"
