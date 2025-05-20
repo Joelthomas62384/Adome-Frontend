@@ -42,7 +42,7 @@ const Navbar = ({ element }: Props) => {
   const reduxDispatch = useDispatch()
 
   const liveMode = state.editor.liveMode
-  const isAdmin = user?.is_admin
+  const isAdmin = user?.is_admin || user?.is_staff
 
   const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation()

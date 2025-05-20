@@ -24,7 +24,6 @@ const page = (props: Props) => {
     queryKey: ['landing-page'],
     queryFn: fetchLandingPage,
     retry: false,
-    staleTime: 1000 * 60 * 60 * 24, 
   });
   
   

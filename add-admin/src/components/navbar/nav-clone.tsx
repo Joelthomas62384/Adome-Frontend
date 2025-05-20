@@ -31,7 +31,7 @@ const NavbarClone = () => {
   const dispatch = useDispatch()
   const { tenant, schemaName } = useSelector((state: RootState) => state.app)
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
-  const isAdmin = user?.is_admin
+  const isAdmin = user?.is_admin || user?.is_staff
   if (pathName.startsWith('/admin') || pathName.startsWith("/login")) return
 
   const handleLogout = async () => {

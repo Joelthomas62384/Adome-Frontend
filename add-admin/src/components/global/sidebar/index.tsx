@@ -16,7 +16,7 @@ const Sidebar = () => {
     { id: "2", name: "Users", link: "/admin/users", icon: <User className="text-themeTextGray" />, permission: "hasStaffPermission" },
     { id: "3", name: "Courses", link: "/admin/courses", icon: <BookA className="text-themeTextGray" size={20} />, permission: "hasCoursesPermission" },
     { id: "4", name: "Blog", link: "/admin/blog", icon: <BookOpen className="text-themeTextGray" size={20} />, permission: "hasBlogPermission" },
-    { id: "9", name: "Plan Change", link: "/admin/subscription", icon: <SubscriptIcon className="text-themeTextGray" size={20} />, permission: "hasBlogPermission" },
+    { id: "9", name: "Plan Change", link: "/admin/subscription", icon: <SubscriptIcon className="text-themeTextGray" size={20} />, permission: "hasSettingPermission" },
     { id: "5", name: "Website Builder", link: "/admin/builder", icon: <GlobeDuoToneBlack />, permission: "hasBuilderPermission" },
     { id: "8", name: "Custom Domain", link: "/admin/custom-domain", icon: <Globe  className="text-themeTextGray" />, permission: "hasSettingPermission" },
     { id: "6", name: "Payment Gateway", link: "/admin/payment", icon: <CreditCard className="text-themeTextGray" size={20} />, permission: "hasPaymentPermission" },

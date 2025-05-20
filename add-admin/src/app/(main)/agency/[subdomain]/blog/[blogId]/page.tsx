@@ -57,10 +57,8 @@ const BlogDetails = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 md:px-32 py-10">
-    {/* Title */}
     <h1 className="text-4xl md:text-5xl font-bold mb-4">{title}</h1>
   
-    {/* Author Info */}
     <div className="flex items-center gap-3 mb-6">
       <Avatar className="h-10 w-10">
         <AvatarImage
@@ -77,7 +75,6 @@ const BlogDetails = () => {
       </div>
     </div>
   
-    {/* Cover Image */}
     {image && (
       <div className="w-full mb-10 max-w-3xl">
         <Image
@@ -90,7 +87,6 @@ const BlogDetails = () => {
       </div>
     )}
   
-    {/* Blog Content (Rich Text) */}
     {JsonContent && (
       <div>
         <BlockTextEditor
@@ -111,7 +107,6 @@ const BlogDetails = () => {
       </div>
     )}
 
-    {/* Comments Section */}
 
     <CommentSection userDetails={userDetails} contentId={blogId as string} />
   </div>

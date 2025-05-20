@@ -52,9 +52,9 @@ axiosInstance.interceptors.request.use(
 
       return config;
     } catch (error) {
- removeCookie('refresh_token')
- removeCookie('access_token')
- removeCookie('expiry')
+   removeCookie('refresh_token')
+   removeCookie('access_token')
+   removeCookie('expiry')
       console.error("Request Interceptor Error:", error);
       return Promise.reject(error);
     }
